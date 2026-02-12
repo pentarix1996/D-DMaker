@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;700&display=swap');
+
+@theme {
+  --color-fantasy-bg: #0f1115;
+  --color-fantasy-dark: #090a0c;
+  --color-fantasy-panel: rgba(20, 24, 32, 0.7);
+  --color-fantasy-gold: #ffd700;
+  --color-fantasy-gold-dim: #c5a000;
+  --color-fantasy-accent: #b026ff;
+  --color-fantasy-accent-glow: #d282ff;
+  --color-fantasy-text: #e2e8f0;
+  --color-fantasy-muted: #94a3b8;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-cinzel: 'Cinzel', serif;
+
+  --image-grid-pattern: linear-gradient(to right, #334155 1px, transparent 1px), linear-gradient(to bottom, #334155 1px, transparent 1px);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-fantasy-bg text-fantasy-text font-sans antialiased;
+  overflow: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-fantasy-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-fantasy-muted/20 rounded hover:bg-fantasy-muted/40;
+}

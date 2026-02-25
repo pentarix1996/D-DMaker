@@ -25,8 +25,9 @@ export interface Scene {
     name: string;
     order: number;
     backgroundAssetId?: string; // Reference to an asset of type 'map'
-    musicData?: Blob; // Optional mp3
-    musicUrl?: string;
+    musicAssetId?: string; // Reference to an asset of type 'audio'
+    musicData?: Blob; // Deprecated: keep for backwards comp momentarily
+    musicUrl?: string; // Deprecated: keep for backwards comp momentarily
     tokens: SceneAsset[];
     gridEnabled: boolean;
     gridColor?: string;

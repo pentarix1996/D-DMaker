@@ -48,10 +48,9 @@ export const EditorCanvas = () => {
                     updateScene(scene.id, { backgroundAssetId: asset.id });
                 }
             } else if (asset.type === 'audio') {
-                // Audio only allowed in Edit Mode (or maybe Play too? User only asked for Tokens)
+                // Audio only allowed in Edit Mode
                 if (isEditMode) {
-                    updateScene(scene.id, { musicUrl: asset.imageUrl, musicData: asset.fileData });
-                    alert(`Music set: ${asset.name}`);
+                    updateScene(scene.id, { musicAssetId: asset.id, musicUrl: undefined, musicData: undefined });
                 }
             } else {
                 // Tokens are added to the stage (Allowed in Play Mode)
@@ -93,7 +92,7 @@ export const EditorCanvas = () => {
     };
 
     const deleteToken = (tokenId: string) => {
-        if (!isEditMode || !scene.tokens) return;
+        if (!scene.tokens) return;
         const newTokens = scene.tokens.filter(t => t.id !== tokenId);
         updateScene(scene.id, { tokens: newTokens });
     };
@@ -139,7 +138,7 @@ export const EditorCanvas = () => {
                         token={token}
                         updateTokenPos={updateTokenPos}
                         updateToken={updateToken}
-                        onDelete={isEditMode ? () => deleteToken(token.id) : undefined}
+                        onDelete={() => deleteToken(token.id)}
                     />
                 ))}
             </div>

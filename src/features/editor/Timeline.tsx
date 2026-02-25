@@ -71,10 +71,27 @@ export const Timeline = () => {
                                 </div>
                             </div>
 
-                            {/* Audio and BG buttons would open dialogs, for now just placeholder icons */}
+                            {/* Audio and BG icons */}
                             <div className="flex gap-1 absolute bottom-2 right-2">
-                                {scene.backgroundAssetId ? <ImageIcon className="w-3 h-3 text-fantasy-accent" /> : null}
-                                {scene.musicUrl ? <Music className="w-3 h-3 text-fantasy-accent" /> : null}
+                                {scene.backgroundAssetId && (
+                                    <div title="Has Background Map" className="p-1 bg-black/40 rounded">
+                                        <ImageIcon className="w-3 h-3 text-fantasy-accent" />
+                                    </div>
+                                )}
+                                {(scene.musicAssetId || scene.musicUrl) ? (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (confirm('Quitar música de esta escena?')) {
+                                                updateScene(scene.id, { musicUrl: undefined, musicData: undefined, musicAssetId: undefined });
+                                            }
+                                        }}
+                                        className="p-1 bg-black/40 hover:bg-red-500/80 rounded transition-colors group/music"
+                                        title="Quitar Música"
+                                    >
+                                        <Music className="w-3 h-3 text-fantasy-accent group-hover/music:text-white" />
+                                    </button>
+                                ) : null}
                             </div>
                         </div>
                     </div>

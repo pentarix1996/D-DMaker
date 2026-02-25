@@ -22,14 +22,14 @@
 
 | Feature | Description |
 |---|---|
-| 🎭 **Story Management** | Create, rename, delete, import and export stories as JSON |
+| 🎭 **Story Management** | Create, rename, delete, import and export stories as ZIP (with assets) |
 | 🗺️ **Scene Editor** | Visual canvas with drag-and-drop for maps, tokens and audio |
 | 🎮 **Player Mode** | Fullscreen presentation mode with scene navigation and ambient audio |
 | 📦 **Asset Vault** | Upload and organize maps, tokens and audio tracks |
 | 🔲 **Configurable Grid** | Toggle grid overlay with custom color and size per scene |
 | 🎵 **Scene Audio** | Attach ambient music to each scene with auto-loop playback |
 | 💾 **Local Persistence** | All data stored in IndexedDB via Dexie — no server required |
-| 📤 **Import / Export** | Share stories between sessions as `.json` files |
+| 📤 **Import / Export** | Share stories between sessions as `.zip` files containing all assets |
 | ✨ **Effects & Auras** | Immersive animations and visual feedback on tokens |
 | 🎬 **Cinematic Mode** | Automatic hiding of inactive UI in the player |
 | ⚡ **Lazy Loading** | Performance optimization by deferring vault bundle |
@@ -84,7 +84,7 @@ The landing page where you manage all your stories.
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐ │
 │  │          │  │          │  │  Dragon   │  │  The     │ │
 │  │  + New   │  │  Import  │  │  Keep     │  │  Crypt   │ │
-│  │  Story   │  │  JSON    │  │          │  │          │ │
+│  │  Story   │  │  ZIP     │  │          │  │          │ │
 │  │          │  │          │  │ ▶ Play   │  │ ▶ Play   │ │
 │  │          │  │          │  │ ✏ Edit   │  │ ✏ Edit   │ │
 │  │          │  │          │  │ ⬇ Export │  │ ⬇ Export │ │
@@ -95,7 +95,7 @@ The landing page where you manage all your stories.
 **Actions available per story:**
 - ▶ **Play** — Launch in Player Mode
 - ✏️ **Edit** — Open in the Scene Editor
-- ⬇️ **Export** — Download as `.json`
+- ⬇️ **Export** — Download as `.zip` (includes media)
 - ✏️ **Rename** — Change story name
 - 🗑️ **Delete** — Remove story
 

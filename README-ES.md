@@ -22,14 +22,14 @@
 
 | Característica | Descripción |
 |---|---|
-| 🎭 **Gestión de Historias** | Crear, renombrar, eliminar, importar y exportar historias como JSON |
+| 🎭 **Gestión de Historias** | Crear, renombrar, eliminar, importar y exportar historias como ZIP (con los assets) |
 | 🗺️ **Editor de Escenas** | Canvas visual con drag-and-drop para mapas, tokens y audio |
 | 🎮 **Modo Jugador** | Modo presentación a pantalla completa con navegación entre escenas y audio ambiente |
 | 📦 **Bóveda de Assets** | Subir y organizar mapas, tokens y pistas de audio |
 | 🔲 **Cuadrícula Configurable** | Overlay de cuadrícula con color y tamaño personalizable por escena |
 | 🎵 **Audio por Escena** | Asociar música ambiental a cada escena con reproducción en bucle |
 | 💾 **Persistencia Local** | Todos los datos se guardan en IndexedDB mediante Dexie — sin servidor |
-| 📤 **Importar / Exportar** | Compartir historias entre sesiones como archivos `.json` |
+| 📤 **Importar / Exportar** | Compartir historias entre sesiones como archivos `.zip` con todos los recursos |
 | ✨ **Efectos y Auras** | Animaciones inmersivas y feedback visual en tokens |
 | 🎬 **Modo Cinematográfico** | Ocultamiento automático de UI inactiva en el reproductor |
 | ⚡ **Carga Diferida (Lazy Load)** | Optimización de rendimiento y bundle diferiendo la bóveda |
@@ -84,7 +84,7 @@ La página de inicio donde gestionas todas tus historias.
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐ │
 │  │          │  │          │  │  Guarida  │  │  La      │ │
 │  │ + Nueva  │  │ Importar │  │  del      │  │  Cripta  │ │
-│  │ Historia │  │   JSON   │  │  Dragón   │  │          │ │
+│  │ Historia │  │   ZIP    │  │  Dragón   │  │          │ │
 │  │          │  │          │  │ ▶ Jugar  │  │ ▶ Jugar  │ │
 │  │          │  │          │  │ ✏ Editar │  │ ✏ Editar │ │
 │  │          │  │          │  │ ⬇ Export │  │ ⬇ Export │ │
@@ -95,7 +95,7 @@ La página de inicio donde gestionas todas tus historias.
 **Acciones disponibles por historia:**
 - ▶ **Jugar** — Lanzar en Modo Jugador
 - ✏️ **Editar** — Abrir en el Editor de Escenas
-- ⬇️ **Exportar** — Descargar como `.json`
+- ⬇️ **Exportar** — Descargar como `.zip` (incluye multimedia)
 - ✏️ **Renombrar** — Cambiar nombre de la historia
 - 🗑️ **Eliminar** — Borrar historia
 

@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense, useRef } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { db } from '@/db';
 import { EditorCanvas } from '@/features/editor/EditorCanvas';
-import { Vault } from '@/features/vault/Vault';
+const Vault = lazy(() => import('@/features/vault/Vault').then(m => ({ default: m.Vault })));
+const DiceRoller = lazy(() => import('@/features/player/DiceRoller').then(m => ({ default: m.DiceRoller })));
+const InitiativeTracker = lazy(() => import('@/features/player/InitiativeTracker').then(m => ({ default: m.InitiativeTracker })));
 import { Button } from '@/components/ui/Button';
-import { ChevronLeft, ChevronRight, Backpack, Menu, Maximize, Grid } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Backpack, Menu, Maximize, Grid, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PlayerViewProps {
@@ -14,10 +17,52 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
     const { scenes, activeSceneId, setActiveScene, getCurrentScene, updateScene } = useGameStore();
     const [showVault, setShowVault] = useState(false);
     const [showSceneMenu, setShowSceneMenu] = useState(false);
+    const [isIdle, setIsIdle] = useState(false);
+    const [volume, setVolume] = useState(0.5); // Default 50% volume
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const fadeIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    // Audio cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.src = "";
+            }
+            if (fadeIntervalRef.current) {
+                clearInterval(fadeIntervalRef.current);
+            }
+        };
+    }, []);
 
     // Derived state
     const currentScene = getCurrentScene();
     const currentIndex = scenes.findIndex(s => s.id === activeSceneId);
+
+    // Idle Timer Logic (Cinematic Mode)
+    useEffect(() => {
+        let timeout: ReturnType<typeof setTimeout>;
+        const handleActivity = () => {
+            setIsIdle(false);
+            clearTimeout(timeout);
+            if (!showVault && !showSceneMenu) {
+                timeout = setTimeout(() => setIsIdle(true), 3000);
+            }
+        };
+
+        window.addEventListener('mousemove', handleActivity);
+        window.addEventListener('keydown', handleActivity);
+        window.addEventListener('click', handleActivity);
+
+        handleActivity(); // Init
+
+        return () => {
+            window.removeEventListener('mousemove', handleActivity);
+            window.removeEventListener('keydown', handleActivity);
+            window.removeEventListener('click', handleActivity);
+            clearTimeout(timeout);
+        };
+    }, [showVault, showSceneMenu]);
 
     // Ensure a scene is always selected
     useEffect(() => {
@@ -44,28 +89,125 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
         }
     };
 
-    // Audio Logic
+    // Audio Logic with Fade In/Out and Dynamic Blob Loading
     useEffect(() => {
-        if (currentScene?.musicUrl) {
-            const audio = new Audio(currentScene.musicUrl);
-            audio.loop = true;
-            audio.play().catch(e => console.log("Audio play failed (interaction needed)", e));
-            return () => {
-                audio.pause();
-                audio.src = "";
-            };
+        let objectUrl: string | null = null;
+        let isCancelled = false;
+
+        // Clear any existing fade
+        if (fadeIntervalRef.current) {
+            clearInterval(fadeIntervalRef.current);
+            fadeIntervalRef.current = null;
         }
-    }, [currentScene?.musicUrl]);
+
+        const playNewAudio = async () => {
+            // Backward compatibility with musicUrl, but primarily load from musicAssetId
+            let effectiveUrl = currentScene?.musicUrl;
+
+            if (currentScene?.musicAssetId) {
+                try {
+                    const asset = await db.assets.get(currentScene.musicAssetId);
+                    if (asset && asset.fileData && !isCancelled) {
+                        objectUrl = URL.createObjectURL(asset.fileData);
+                        effectiveUrl = objectUrl;
+                    }
+                } catch (e) {
+                    console.error("Failed to load audio from DB", e);
+                }
+            }
+
+            if (!effectiveUrl || isCancelled) return;
+
+            const newAudio = new Audio(effectiveUrl);
+            newAudio.loop = true;
+            newAudio.volume = 0; // Start at 0 for fade in
+
+            newAudio.play().then(() => {
+                if (isCancelled) {
+                    newAudio.pause();
+                    return;
+                }
+
+                audioRef.current = newAudio;
+
+                // Fade In
+                let currentVol = 0;
+                const targetVol = volume;
+                fadeIntervalRef.current = setInterval(() => {
+                    currentVol += 0.05;
+                    if (currentVol >= targetVol) {
+                        newAudio.volume = targetVol;
+                        if (fadeIntervalRef.current) {
+                            clearInterval(fadeIntervalRef.current);
+                            fadeIntervalRef.current = null;
+                        }
+                    } else {
+                        newAudio.volume = currentVol;
+                    }
+                }, 100);
+            }).catch(e => console.log("Audio play failed (interaction needed)", e));
+        };
+
+        // Let's assume a change in scene triggers this effect.
+        if (audioRef.current) {
+            // We have a playing track. Fade it out.
+            const oldAudio = audioRef.current;
+            oldAudio.dataset.beingFadedOut = "true"; // mark to avoid re-using
+            let currentVol = oldAudio.volume;
+
+            fadeIntervalRef.current = setInterval(() => {
+                currentVol -= 0.05;
+                if (currentVol <= 0 || isCancelled) {
+                    oldAudio.pause();
+                    oldAudio.src = "";
+                    if (fadeIntervalRef.current) {
+                        clearInterval(fadeIntervalRef.current);
+                        fadeIntervalRef.current = null;
+                    }
+
+                    if (!isCancelled) {
+                        playNewAudio(); // After fade out completes, play the new one
+                    }
+                } else {
+                    oldAudio.volume = currentVol;
+                }
+            }, 50);
+
+        } else {
+            // No track playing currently
+            playNewAudio();
+        }
+
+        // Cleanup
+        return () => {
+            isCancelled = true;
+            if (fadeIntervalRef.current) {
+                clearInterval(fadeIntervalRef.current);
+            }
+            if (objectUrl) {
+                URL.revokeObjectURL(objectUrl);
+            }
+        };
+    }, [currentScene?.musicAssetId, currentScene?.musicUrl, currentScene?.id]);
+
+    // Handle global volume changes instantly for the currently playing track
+    useEffect(() => {
+        if (audioRef.current && !fadeIntervalRef.current) {
+            audioRef.current.volume = volume;
+        }
+    }, [volume]);
 
     return (
         <div className="h-screen w-screen overflow-hidden bg-fantasy-black relative">
             {/* Vault Overlay - Fixed visibility bug by passing clean className to remove fixed positioning from Vault component */}
             <div className={cn("fixed left-0 top-0 bottom-0 z-40 transition-transform duration-300 w-80", showVault ? "translate-x-0" : "-translate-x-full")}>
-                <Vault
-                    allowedTypes={['token']}
-                    className="w-full h-full flex flex-col backdrop-blur-xl bg-fantasy-dark/95 border-r border-white/10 shadow-2xl"
-                    onClose={() => setShowVault(false)}
-                />
+                <Suspense fallback={<div className="w-full h-full bg-fantasy-dark/95 backdrop-blur-xl border-r border-white/10 flex items-center justify-center p-4 text-fantasy-muted animate-pulse">Cargando Bóveda...</div>}>
+                    <Vault
+                        allowedTypes={['token']}
+                        className="w-full h-full flex flex-col backdrop-blur-xl bg-fantasy-dark/95 border-r border-white/10 shadow-2xl"
+                        onClose={() => setShowVault(false)}
+                    />
+                </Suspense>
             </div>
 
             {/* Scene Selector - Below Vault button as requested */}
@@ -91,8 +233,16 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
                 <EditorCanvas />
             </div>
 
+            {/* Float Widgets (Interactive even when idle if desired, or let them fade) */}
+            <div className={cn("transition-opacity duration-700 ease-in-out", isIdle ? "opacity-0 pointer-events-none" : "opacity-100")}>
+                <Suspense fallback={null}>
+                    <DiceRoller />
+                    <InitiativeTracker />
+                </Suspense>
+            </div>
+
             {/* UI Overlay */}
-            <div className="absolute inset-0 z-30 pointer-events-none flex flex-col justify-between p-6">
+            <div className={cn("absolute inset-0 z-30 pointer-events-none flex flex-col justify-between p-6 transition-opacity duration-700 ease-in-out", isIdle ? "opacity-0" : "opacity-100")}>
 
                 {/* Top Controls */}
                 <div className="flex justify-between items-start pointer-events-auto">
@@ -132,9 +282,23 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
                         </Button>
                     </div>
 
-                    <div className="flex gap-2">
-                        <Button variant="ghost" size="icon" onClick={toggleFullscreen} title="Fullscreen">
-                            <Maximize className="w-6 h-6 text-fantasy-gold" />
+                    <div className="flex gap-4 items-center bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm pointer-events-auto">
+                        <div className="flex items-center gap-2">
+                            {volume === 0 ? <VolumeX className="w-4 h-4 text-fantasy-muted" /> : <Volume2 className="w-4 h-4 text-fantasy-gold" />}
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.05"
+                                value={volume}
+                                onChange={(e) => setVolume(parseFloat(e.target.value))}
+                                className="w-24 accent-fantasy-gold cursor-pointer"
+                                title="Music Volume"
+                            />
+                        </div>
+                        <div className="w-px h-6 bg-white/20" />
+                        <Button variant="ghost" size="icon" onClick={toggleFullscreen} title="Fullscreen" className="hover:bg-white/10 rounded-full h-8 w-8">
+                            <Maximize className="w-4 h-4 text-fantasy-gold" />
                         </Button>
                     </div>
                 </div>

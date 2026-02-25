@@ -1,4 +1,5 @@
 import React from 'react';
+import JSZip from 'jszip';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db';
 import { Button } from '@/components/ui/Button';
@@ -35,28 +36,98 @@ export const Home = ({ onNavigate }: HomeProps) => {
         const file = e.target.files?.[0];
         if (!file) return;
         try {
-            const text = await file.text();
-            const { story, scenes } = JSON.parse(text);
-            // Only import if valid structure
+            const zip = await JSZip.loadAsync(file);
+
+            // Read story data
+            const storyFile = zip.file("story.json");
+            if (!storyFile) throw new Error("Invalid format: missing story.json");
+            const storyText = await storyFile.async("text");
+            const { story, scenes } = JSON.parse(storyText);
+
+            // Read asset metadata
+            const assetsFile = zip.file("assets.json");
+            const newAssets: any[] = [];
+
+            if (assetsFile) {
+                const assetsText = await assetsFile.async("text");
+                const assetMetadata = JSON.parse(assetsText);
+
+                // Read each asset file
+                for (const meta of assetMetadata) {
+                    const assetDataFile = zip.file(`assets/${meta.id}`);
+                    if (assetDataFile) {
+                        const blob = await assetDataFile.async("blob");
+                        const imageUrl = URL.createObjectURL(blob);
+
+                        newAssets.push({
+                            id: meta.id,
+                            name: meta.name,
+                            type: meta.type,
+                            fileData: blob,
+                            imageUrl: imageUrl
+                        });
+                    }
+                }
+            }
+
             if (story && Array.isArray(scenes)) {
-                await db.transaction('rw', db.stories, db.scenes, async () => {
+                await db.transaction('rw', db.stories, db.scenes, db.assets, async () => {
                     await db.stories.put(story);
                     await db.scenes.bulkPut(scenes);
+                    if (newAssets.length > 0) {
+                        await db.assets.bulkPut(newAssets);
+                    }
                 });
             }
         } catch (err) {
-            alert('Failed to import story');
+            console.error(err);
+            alert('Failed to import story from ZIP');
+        } finally {
+            e.target.value = '';
         }
     };
 
     const exportStory = async (storyId: string) => {
         const story = await db.stories.get(storyId);
+        if (!story) return;
+
         const scenes = await db.scenes.where('storyId').equals(storyId).toArray();
-        const blob = new Blob([JSON.stringify({ story, scenes }, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
+
+        // Collect all asset IDs used in scenes
+        const assetIds = new Set<string>();
+        scenes.forEach(scene => {
+            if (scene.backgroundAssetId) assetIds.add(scene.backgroundAssetId);
+            if (scene.musicAssetId) assetIds.add(scene.musicAssetId);
+            scene.tokens.forEach(token => assetIds.add(token.assetId));
+        });
+
+        // Fetch assets from DB
+        const assets = await Promise.all(
+            Array.from(assetIds).map(id => db.assets.get(id))
+        );
+        const validAssets = assets.filter((a): a is NonNullable<typeof a> => a !== undefined);
+
+        const zip = new JSZip();
+
+        // Add story data
+        zip.file("story.json", JSON.stringify({ story, scenes }, null, 2));
+
+        // Add asset metadata
+        const assetMetadata = validAssets.map(a => ({ id: a.id, name: a.name, type: a.type }));
+        zip.file("assets.json", JSON.stringify(assetMetadata, null, 2));
+
+        // Add asset files
+        const assetsFolder = zip.folder("assets");
+        validAssets.forEach(asset => {
+            assetsFolder?.file(asset.id, asset.fileData);
+        });
+
+        // Generate and download zip
+        const zipContent = await zip.generateAsync({ type: 'blob' });
+        const url = URL.createObjectURL(zipContent);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${story?.name || 'story'}.json`;
+        a.download = `${story.name || 'story'}.zip`;
         a.click();
         URL.revokeObjectURL(url);
     };
@@ -98,11 +169,11 @@ export const Home = ({ onNavigate }: HomeProps) => {
 
                     {/* Import */}
                     <label className="h-72 flex flex-col items-center justify-center cursor-pointer hover:bg-fantasy-gold/5 group transition-all border-dashed border-2 border-fantasy-muted/20 hover:border-fantasy-gold relative bg-fantasy-panel/40 rounded-xl overflow-hidden backdrop-blur-md">
-                        <input type="file" className="hidden" accept=".json" onChange={importStory} />
+                        <input type="file" className="hidden" accept=".zip" onChange={importStory} />
                         <div className="w-16 h-16 rounded-full bg-fantasy-gold/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                             <Upload className="w-8 h-8 text-fantasy-gold" />
                         </div>
-                        <h3 className="text-xl font-cinzel text-fantasy-text group-hover:text-fantasy-gold transition-colors">Import JSON</h3>
+                        <h3 className="text-xl font-cinzel text-fantasy-text group-hover:text-fantasy-gold transition-colors">Import ZIP</h3>
                     </label>
 
                     {/* List Stories */}

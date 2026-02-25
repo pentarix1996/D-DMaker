@@ -30,6 +30,12 @@
 | 🎵 **Scene Audio** | Attach ambient music to each scene with auto-loop playback |
 | 💾 **Local Persistence** | All data stored in IndexedDB via Dexie — no server required |
 | 📤 **Import / Export** | Share stories between sessions as `.json` files |
+| ✨ **Effects & Auras** | Immersive animations and visual feedback on tokens |
+| 🎬 **Cinematic Mode** | Automatic hiding of inactive UI in the player |
+| ⚡ **Lazy Loading** | Performance optimization by deferring vault bundle |
+| 🗑️ **Quick Delete** | Tokens can be deleted in real-time during gameplay |
+| 🎲 **Integrated Dice** | Interactive floating panel to roll dice (d4 to d20) |
+| ⚔️ **Initiative Tracker** | Integrated turn tracking system for combat |
 
 ---
 
@@ -269,7 +275,7 @@ erDiagram
         string name
         int order
         string backgroundAssetId
-        blob musicData
+        string musicAssetId
         bool gridEnabled
         string gridColor
         int gridSize

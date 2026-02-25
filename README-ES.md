@@ -30,6 +30,12 @@
 | 🎵 **Audio por Escena** | Asociar música ambiental a cada escena con reproducción en bucle |
 | 💾 **Persistencia Local** | Todos los datos se guardan en IndexedDB mediante Dexie — sin servidor |
 | 📤 **Importar / Exportar** | Compartir historias entre sesiones como archivos `.json` |
+| ✨ **Efectos y Auras** | Animaciones inmersivas y feedback visual en tokens |
+| 🎬 **Modo Cinematográfico** | Ocultamiento automático de UI inactiva en el reproductor |
+| ⚡ **Carga Diferida (Lazy Load)** | Optimización de rendimiento y bundle diferiendo la bóveda |
+| 🗑️ **Eliminación Rápida** | Los tokens pueden ser eliminados en tiempo real durante la partida |
+| 🎲 **Dados Integrados** | Panel flotante interactivo para realizar tiradas (d4 a d20) |
+| ⚔️ **Rastreador de Iniciativa** | Sistema integrado de seguimiento de turnos para combates |
 
 ---
 
@@ -269,7 +275,7 @@ erDiagram
         string name
         int order
         string backgroundAssetId
-        blob musicData
+        string musicAssetId
         bool gridEnabled
         string gridColor
         int gridSize

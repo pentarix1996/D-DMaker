@@ -58,7 +58,7 @@ export const DraggableToken = ({ token, updateTokenPos, updateToken, onDelete, d
             >
                 {/* Visual Representation */}
                 <div
-                    className={`w-full h-full transition-all shadow-xl overflow-hidden relative bg-black ${shape === 'circle' ? 'rounded-full' : 'rounded-md'} ${disabled ? '' : 'group-hover:ring-2 group-hover:ring-fantasy-accent/60'}`}
+                    className={`w-full h-full transition-all duration-300 overflow-hidden relative bg-black ${shape === 'circle' ? 'rounded-full' : 'rounded-md'} ${disabled ? '' : 'shadow-xl group-hover:ring-2 group-hover:ring-fantasy-gold/60 group-hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] group-active:scale-95 group-active:shadow-2xl'}`}
                     style={{ transform: `scale(${scale})` }}
                 >
                     <AssetImage

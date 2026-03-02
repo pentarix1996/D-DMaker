@@ -1,0 +1,22 @@
+{
+    "maps": [
+        {
+            "file": "tabern_map01.jpg",
+            "name": "Tavern"
+        },
+        {
+            "file": "cementery_map01.webp",
+            "name": "Cementery"
+        }
+    ],
+    "tokens": [
+        {
+            "file": "enemy_01.webp",
+            "name": "Enemy"
+        },
+        {
+            "file": "enemy_02.webp",
+            "name": "Enemy 2"
+        }
+    ]
+}

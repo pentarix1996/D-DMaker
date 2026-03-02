@@ -8,6 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Version](https://img.shields.io/badge/Version-1.1.0-brightgreen)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **DungeonFrame** is a web-based visual engine designed for **Dungeon Masters** and storytellers who want to build, edit, and present immersive tabletop RPG scenes — all from the browser, with zero server dependencies.
@@ -315,6 +316,12 @@ erDiagram
 ## 📜 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 📋 Changelog
+
+See the full [Changelog](CHANGELOG.md) for a detailed history of all changes.
 
 ---
 

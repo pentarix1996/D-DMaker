@@ -1,7 +1,7 @@
 {
-  "name": "spectral-corona",
+  "name": "dungeon-frame",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

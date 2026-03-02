@@ -244,6 +244,10 @@ export const Home = ({ onNavigate }: HomeProps) => {
                     ))}
                 </div>
             </div>
+
+            <span className="fixed bottom-4 right-4 text-fantasy-muted/50 text-xs tracking-wider z-10 select-none">
+                v1.1.1
+            </span>
         </div>
     );
 };

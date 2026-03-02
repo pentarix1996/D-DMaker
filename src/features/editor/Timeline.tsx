@@ -1,12 +1,13 @@
+import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { Plus, Image as ImageIcon, Music, Grid } from 'lucide-react';
+import { Plus, Image as ImageIcon, Music, Grid, Edit2, Trash2 } from 'lucide-react';
 import type { Scene } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const Timeline = () => {
-    const { scenes, activeSceneId, setActiveScene, addScene, updateScene, activeStory } = useGameStore();
+    const { scenes, activeSceneId, setActiveScene, addScene, updateScene, deleteScene, activeStory } = useGameStore();
 
     const handleAddScene = () => {
         if (!activeStory) return;
@@ -18,10 +19,18 @@ export const Timeline = () => {
             order: scenes.length,
             tokens: [],
             gridEnabled: false,
-            gridColor: '#334155', // Default slate-700
-            gridSize: 48 // Bigger squares as requested
+            gridColor: '#334155',
+            gridSize: 48
         };
         addScene(newScene);
+    };
+
+    const handleRenameScene = (e: React.MouseEvent, scene: Scene) => {
+        e.stopPropagation();
+        const newName = window.prompt("Rename scene:", scene.name);
+        if (newName && newName.trim()) {
+            updateScene(scene.id, { name: newName.trim() });
+        }
     };
 
     return (
@@ -39,6 +48,27 @@ export const Timeline = () => {
                         {/* Scene Number */}
                         <div className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded text-xs text-fantasy-gold font-cinzel z-10">
                             {index + 1}. {scene.name}
+                        </div>
+
+                        {/* Rename Button */}
+                        <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100">
+                            <button
+                                onClick={(e) => handleRenameScene(e, scene)}
+                                className="p-1 bg-black/60 rounded text-fantasy-muted hover:text-fantasy-gold transition-colors"
+                                title="Rename Scene"
+                            >
+                                <Edit2 className="w-3 h-3" />
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (confirm(`Delete scene "${scene.name}"?`)) deleteScene(scene.id);
+                                }}
+                                className="p-1 bg-black/60 rounded text-fantasy-muted hover:text-red-500 transition-colors"
+                                title="Delete Scene"
+                            >
+                                <Trash2 className="w-3 h-3" />
+                            </button>
                         </div>
 
                         {/* Controls Overlay (Visible on Hover/Active) */}
@@ -69,6 +99,36 @@ export const Timeline = () => {
                                         />
                                     )}
                                 </div>
+                                {scene.gridEnabled && (
+                                    <div className="flex items-center gap-1 mt-1" onClick={(e) => e.stopPropagation()}>
+                                        <input
+                                            type="range"
+                                            min="24"
+                                            max="128"
+                                            step="4"
+                                            value={scene.gridSize || 48}
+                                            onChange={(e) => updateScene(scene.id, { gridSize: Number(e.target.value) })}
+                                            className="w-20 h-1 accent-fantasy-gold cursor-pointer"
+                                            title={`Grid Size: ${scene.gridSize || 48}px`}
+                                        />
+                                        <input
+                                            type="number"
+                                            min="24"
+                                            max="128"
+                                            step="4"
+                                            value={scene.gridSize || 48}
+                                            onChange={(e) => {
+                                                updateScene(scene.id, { gridSize: Number(e.target.value) || 0 });
+                                            }}
+                                            onBlur={(e) => {
+                                                const val = Math.max(24, Math.min(128, Number(e.target.value) || 48));
+                                                updateScene(scene.id, { gridSize: val });
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="w-10 text-[10px] text-fantasy-muted bg-black/40 border border-white/10 rounded px-1 py-0 text-center focus:outline-none focus:border-fantasy-gold"
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             {/* Audio and BG icons */}

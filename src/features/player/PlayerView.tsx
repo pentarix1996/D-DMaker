@@ -198,7 +198,7 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
     }, [volume]);
 
     return (
-        <div className="h-screen w-screen overflow-hidden bg-fantasy-black relative">
+        <div className="h-screen w-screen overflow-auto bg-fantasy-black relative">
             {/* Vault Overlay - Fixed visibility bug by passing clean className to remove fixed positioning from Vault component */}
             <div className={cn("fixed left-0 top-0 bottom-0 z-40 transition-transform duration-300 w-80", showVault ? "translate-x-0" : "-translate-x-full")}>
                 <Suspense fallback={<div className="w-full h-full bg-fantasy-dark/95 backdrop-blur-xl border-r border-white/10 flex items-center justify-center p-4 text-fantasy-muted animate-pulse">Cargando Bóveda...</div>}>
@@ -242,7 +242,7 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
             </div>
 
             {/* UI Overlay */}
-            <div className={cn("absolute inset-0 z-30 pointer-events-none flex flex-col justify-between p-6 transition-opacity duration-700 ease-in-out", isIdle ? "opacity-0" : "opacity-100")}>
+            <div className={cn("fixed inset-0 z-30 pointer-events-none flex flex-col justify-between p-6 transition-opacity duration-700 ease-in-out", isIdle ? "opacity-0" : "opacity-100")}>
 
                 {/* Top Controls */}
                 <div className="flex justify-between items-start pointer-events-auto">

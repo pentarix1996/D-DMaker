@@ -26,7 +26,7 @@ export const EditorView = ({ onNavigate }: EditorViewProps) => {
             <Vault allowedTypes={['map', 'token', 'audio']} />
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col ml-80 h-full relative z-10">
+            <div className="flex-1 flex flex-col ml-80 h-full min-h-0 overflow-hidden relative z-10">
                 <div className="absolute top-4 right-4 z-50 flex gap-2">
                     <Button variant="secondary" onClick={() => onNavigate('HOME')}>
                         <ArrowLeft className="w-4 h-4 mr-2" /> Back
@@ -36,7 +36,9 @@ export const EditorView = ({ onNavigate }: EditorViewProps) => {
                     </Button>
                 </div>
 
-                <EditorCanvas />
+                <div className="flex-1 min-h-0 overflow-hidden">
+                    <EditorCanvas />
+                </div>
                 <Timeline />
             </div>
         </div>

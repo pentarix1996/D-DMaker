@@ -1,4 +1,4 @@
-export type AssetType = 'map' | 'token' | 'audio';
+export type AssetType = 'map' | 'token' | 'asset' | 'audio';
 
 export interface Asset {
     id: string;

@@ -3,12 +3,14 @@ import { db } from '@/db';
 import type { AssetType } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const useAssets = (type?: AssetType) => {
+export const useAssets = (type?: AssetType | AssetType[]) => {
     const assets = useLiveQuery(
-        () => type
-            ? db.assets.where('type').equals(type).toArray()
-            : db.assets.toArray(),
-        [type]
+        () => {
+            if (!type) return db.assets.toArray();
+            if (Array.isArray(type)) return db.assets.where('type').anyOf(type).toArray();
+            return db.assets.where('type').equals(type).toArray();
+        },
+        [Array.isArray(type) ? type.join(',') : type]
     );
 
     const addAsset = async (file: File, type: AssetType) => {

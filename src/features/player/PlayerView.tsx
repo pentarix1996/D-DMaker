@@ -203,7 +203,7 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
             <div className={cn("fixed left-0 top-0 bottom-0 z-40 transition-transform duration-300 w-80", showVault ? "translate-x-0" : "-translate-x-full")}>
                 <Suspense fallback={<div className="w-full h-full bg-fantasy-dark/95 backdrop-blur-xl border-r border-white/10 flex items-center justify-center p-4 text-fantasy-muted animate-pulse">Cargando Bóveda...</div>}>
                     <Vault
-                        allowedTypes={['token']}
+                        allowedTypes={['token', 'asset']}
                         className="w-full h-full flex flex-col backdrop-blur-xl bg-fantasy-dark/95 border-r border-white/10 shadow-2xl"
                         onClose={() => setShowVault(false)}
                     />
@@ -211,15 +211,15 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
             </div>
 
             {/* Scene Selector - Below Vault button as requested */}
-            <div className={cn("fixed left-0 top-16 z-30 transition-transform duration-300 w-64", showSceneMenu ? "translate-x-0" : "-translate-x-full")}>
+            <div className={cn("fixed left-0 top-16 z-30 transition-transform duration-300", showSceneMenu ? "translate-x-0" : "-translate-x-full")}>
                 <div className="bg-fantasy-panel/95 backdrop-blur-md border-r border-b border-t border-white/10 p-2 rounded-r-lg mt-2 ml-2">
                     <h3 className="text-fantasy-gold font-cinzel mb-2 text-sm uppercase tracking-wider border-b border-white/10 pb-1">Scenes</h3>
-                    <div className="max-h-[60vh] overflow-y-auto space-y-1">
+                    <div className="flex flex-nowrap gap-1 overflow-x-auto max-w-[80vw] pb-1">
                         {scenes.map((s, idx) => (
                             <div
                                 key={s.id}
                                 onClick={() => { setActiveScene(s.id); }}
-                                className={cn("p-2 text-sm rounded cursor-pointer hover:bg-white/10 transition-colors flex items-center gap-2", activeSceneId === s.id ? "bg-fantasy-accent/20 text-fantasy-gold" : "text-fantasy-text")}
+                                className={cn("flex-shrink-0 px-3 py-1.5 text-sm rounded cursor-pointer hover:bg-white/10 transition-colors flex items-center gap-1.5 whitespace-nowrap", activeSceneId === s.id ? "bg-fantasy-accent/20 text-fantasy-gold" : "text-fantasy-text")}
                             >
                                 <span className="text-fantasy-muted font-mono text-xs opacity-50">{idx + 1}.</span> {s.name}
                             </div>

@@ -15,6 +15,10 @@ export const EditorView = ({ onNavigate }: EditorViewProps) => {
 
     const handleSave = async () => {
         if (!activeStory) return;
+        const currentIds = new Set(scenes.map(s => s.id));
+        const storedScenes = await db.scenes.where('storyId').equals(activeStory.id).toArray();
+        const deletedIds = storedScenes.map(s => s.id).filter(id => !currentIds.has(id));
+        if (deletedIds.length > 0) await db.scenes.bulkDelete(deletedIds);
         await db.scenes.bulkPut(scenes);
         await db.stories.update(activeStory.id, { lastPlayed: new Date().toISOString() });
         alert('Progress Saved!');

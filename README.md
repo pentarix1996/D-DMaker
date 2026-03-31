@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Version](https://img.shields.io/badge/Version-1.1.0-brightgreen)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.2.0-brightgreen)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **DungeonFrame** is a web-based visual engine designed for **Dungeon Masters** and storytellers who want to build, edit, and present immersive tabletop RPG scenes — all from the browser, with zero server dependencies.
@@ -29,10 +29,12 @@
 | 🗺️ **Scene Editor** | Visual canvas with drag-and-drop for maps, tokens and audio |
 | 🎮 **Player Mode** | Fullscreen presentation mode with scene navigation and ambient audio |
 | 📦 **Asset Vault** | Upload and organize maps, tokens and audio tracks |
+| ⚙️ **Config Assets** | Configure token/asset types, player metadata and light radius from Home |
 | 🔲 **Configurable Grid** | Toggle grid overlay with custom color and size per scene |
+| 🌫️ **Fog of War** | Paint and erase fog in Editor, reveal explored areas in Player mode |
 | 🎵 **Scene Audio** | Attach ambient music to each scene with auto-loop playback |
 | 💾 **Local Persistence** | All data stored in IndexedDB via Dexie — no server required |
-| 📤 **Import / Export** | Share stories between sessions as `.zip` files containing all assets |
+| 📤 **Import / Export** | Share stories between sessions as `.zip` files containing assets and asset configuration |
 | ✨ **Effects & Auras** | Immersive animations and visual feedback on tokens |
 | 🎬 **Cinematic Mode** | Automatic hiding of inactive UI in the player |
 | ⚡ **Lazy Loading** | Performance optimization by deferring vault bundle |
@@ -99,6 +101,7 @@ The landing page where you manage all your stories.
 - ▶ **Play** — Launch in Player Mode
 - ✏️ **Edit** — Open in the Scene Editor
 - ⬇️ **Export** — Download as `.zip` (includes media)
+- ⚙️ **Config Assets** — Open global asset configuration panel
 - ✏️ **Rename** — Change story name
 - 🗑️ **Delete** — Remove story
 
@@ -188,7 +191,7 @@ The immersive view designed for live sessions.
 
 ### Prerequisites
 
-- **Node.js** ≥ 18
+- **Node.js** ≥ 20.19
 - **npm** ≥ 9
 
 ### Installation

@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Versión](https://img.shields.io/badge/Versión-1.1.0-brightgreen)](CHANGELOG-ES.md)
+[![Versión](https://img.shields.io/badge/Versión-1.2.0-brightgreen)](CHANGELOG-ES.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **DungeonFrame** es un motor visual web diseñado para **Dungeon Masters** y narradores que quieren construir, editar y presentar escenas inmersivas de RPG de mesa — todo desde el navegador, sin ninguna dependencia de servidor.
@@ -29,10 +29,12 @@
 | 🗺️ **Editor de Escenas** | Canvas visual con drag-and-drop para mapas, tokens y audio |
 | 🎮 **Modo Jugador** | Modo presentación a pantalla completa con navegación entre escenas y audio ambiente |
 | 📦 **Bóveda de Assets** | Subir y organizar mapas, tokens y pistas de audio |
+| ⚙️ **Config Assets** | Configurar tipos de token/asset, metadatos de player y radio de luz desde Home |
 | 🔲 **Cuadrícula Configurable** | Overlay de cuadrícula con color y tamaño personalizable por escena |
+| 🌫️ **Niebla de Guerra** | Pintar y borrar niebla en Editor, revelar zonas exploradas en modo Jugador |
 | 🎵 **Audio por Escena** | Asociar música ambiental a cada escena con reproducción en bucle |
 | 💾 **Persistencia Local** | Todos los datos se guardan en IndexedDB mediante Dexie — sin servidor |
-| 📤 **Importar / Exportar** | Compartir historias entre sesiones como archivos `.zip` con todos los recursos |
+| 📤 **Importar / Exportar** | Compartir historias entre sesiones como archivos `.zip` con recursos y configuración de assets |
 | ✨ **Efectos y Auras** | Animaciones inmersivas y feedback visual en tokens |
 | 🎬 **Modo Cinematográfico** | Ocultamiento automático de UI inactiva en el reproductor |
 | ⚡ **Carga Diferida (Lazy Load)** | Optimización de rendimiento y bundle diferiendo la bóveda |
@@ -99,6 +101,7 @@ La página de inicio donde gestionas todas tus historias.
 - ▶ **Jugar** — Lanzar en Modo Jugador
 - ✏️ **Editar** — Abrir en el Editor de Escenas
 - ⬇️ **Exportar** — Descargar como `.zip` (incluye multimedia)
+- ⚙️ **Config Assets** — Abrir panel global de configuración de assets
 - ✏️ **Renombrar** — Cambiar nombre de la historia
 - 🗑️ **Eliminar** — Borrar historia
 
@@ -188,7 +191,7 @@ La vista inmersiva diseñada para sesiones en vivo.
 
 ### Requisitos Previos
 
-- **Node.js** ≥ 18
+- **Node.js** ≥ 20.19
 - **npm** ≥ 9
 
 ### Instalación

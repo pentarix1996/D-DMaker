@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 🇪🇸 **[Leer en Español](CHANGELOG-ES.md)**
 
+## [1.2.0] - 2026-03-31
+
+### Added
+
+- **Fog of War (Editor)**: Added fog editing mode with paint/erase tools and configurable brush size.
+- **Fog of War (Player)**: Added dark fog overlay rendering with progressive reveal of explored areas.
+- **Config Assets View**: Added a dedicated Home section to configure maps, tokens, assets and tracks.
+- **Asset Metadata**: Added token roles (`enemy`, `player`, `npc`, `other`), asset roles (`common`, `light_source`), player metadata, and light radius settings.
+- **Configuration in ZIP**: Story import/export now includes asset configuration metadata while remaining backward-compatible with older ZIP files.
+- **Test Infrastructure**: Added Vitest and unit tests for fog logic, token interaction rules and asset configuration defaults.
+
+### Changed
+
+- **Versioning**: Project version bumped to `1.2.0` across package metadata and UI version indicator.
+- **Player Interactions**: Tokens can now be moved/edited in Player mode; interaction lock is restricted to fog edit mode in Editor.
+- **Lighting Balance**: Light radius effectiveness was reduced to avoid over-revealing fog at medium values.
+
+### Fixed
+
+- **Config Persistence Bug**: Fixed token/asset type selectors resetting to defaults immediately after selection.
+- **Fog Persistence**: Revealed fog areas now remain uncovered after being discovered.
+- **Role-based Controls**: `Enemy` and `NPC` tokens no longer expose light radius configuration in Config Assets.
+
 ## [1.1.1] - 2026-03-02
 
 ### Fixed

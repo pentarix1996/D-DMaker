@@ -7,6 +7,29 @@ y este proyecto sigue [Versionado Semántico](https://semver.org/lang/es/).
 
 🇬🇧 **[Read in English](CHANGELOG.md)**
 
+## [1.2.0] - 2026-03-31
+
+### Añadido
+
+- **Niebla de Guerra (Editor)**: Nuevo modo de edición de niebla con herramientas de pintar/borrar y tamaño de pincel configurable.
+- **Niebla de Guerra (Jugador)**: Nueva capa oscura de niebla con revelado progresivo de zonas exploradas.
+- **Vista Config Assets**: Nueva sección en Home para configurar mapas, tokens, assets y tracks.
+- **Metadatos de Assets**: Nuevos roles de token (`enemy`, `player`, `npc`, `other`), roles de asset (`common`, `light_source`), metadatos de player y radio de luz.
+- **Configuración en ZIP**: La importación/exportación de historias ahora incluye metadatos de configuración de assets, manteniendo compatibilidad con ZIP antiguos.
+- **Infraestructura de Tests**: Se añadió Vitest y tests unitarios para lógica de niebla, reglas de interacción de tokens y defaults de configuración de assets.
+
+### Cambiado
+
+- **Versionado**: Versión del proyecto actualizada a `1.2.0` en metadatos y en el indicador visual de la app.
+- **Interacciones en Jugador**: Los tokens ahora se pueden mover/editar en modo Jugador; el bloqueo de interacción queda limitado al modo de edición de niebla en Editor.
+- **Balance de Iluminación**: Se redujo la efectividad del radio de luz para evitar revelar demasiada niebla con valores medios.
+
+### Corregido
+
+- **Bug de Persistencia en Configuración**: Corregido el reinicio inmediato a valores por defecto al cambiar tipos de token/asset.
+- **Persistencia de Niebla**: Las zonas reveladas de niebla permanecen descubiertas tras ser exploradas.
+- **Controles por Rol**: Los tokens `Enemy` y `NPC` ya no muestran configuración de radio de luz en Config Assets.
+
 ## [1.1.1] - 2026-03-02
 
 ### Corregido

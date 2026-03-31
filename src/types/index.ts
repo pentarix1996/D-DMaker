@@ -1,4 +1,12 @@
 export type AssetType = 'map' | 'token' | 'asset' | 'audio';
+export type TokenRole = 'enemy' | 'player' | 'npc' | 'other';
+export type AssetRole = 'light_source' | 'common';
+
+export interface PlayerConfig {
+    name: string;
+    className: string;
+    level: number;
+}
 
 export interface Asset {
     id: string;
@@ -6,6 +14,10 @@ export interface Asset {
     type: AssetType;
     fileData: Blob; // For IndexedDB storage
     imageUrl: string; // Blob URL for preview (or object URL for audio)
+    tokenRole?: TokenRole;
+    assetRole?: AssetRole;
+    lightRadius?: number;
+    playerConfig?: PlayerConfig;
 }
 
 export interface SceneAsset {
@@ -17,6 +29,14 @@ export interface SceneAsset {
     shape: 'circle' | 'square';
     rotation?: number;
     layer?: number; // z-index equivalent
+}
+
+export interface FogOfWar {
+    enabled: boolean;
+    brushSize: number;
+    width: number;
+    height: number;
+    mask: number[];
 }
 
 export interface Scene {
@@ -32,6 +52,7 @@ export interface Scene {
     gridEnabled: boolean;
     gridColor?: string;
     gridSize?: number;
+    fogOfWar?: FogOfWar;
 }
 
 export interface Story {

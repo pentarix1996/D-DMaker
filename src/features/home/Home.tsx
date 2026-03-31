@@ -4,13 +4,14 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db';
 import { Button } from '@/components/ui/Button';
 import { GlassPanel } from '@/components/ui/GlassPanel';
-import { Play, Plus, Trash2, Upload, Download, Edit2 } from 'lucide-react';
-import type { Story } from '@/types';
+import { Play, Plus, Trash2, Upload, Download, Edit2, Settings } from 'lucide-react';
+import type { Asset, Story } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useGameStore } from '@/store/gameStore';
+import { resolveAssetRole, resolveLightRadius, resolveTokenRole } from '@/lib/assetConfig';
 
 interface HomeProps {
-    onNavigate: (view: 'EDITOR' | 'PLAYER') => void;
+    onNavigate: (view: 'EDITOR' | 'PLAYER' | 'CONFIG_ASSETS') => void;
 }
 
 export const Home = ({ onNavigate }: HomeProps) => {
@@ -46,7 +47,7 @@ export const Home = ({ onNavigate }: HomeProps) => {
 
             // Read asset metadata
             const assetsFile = zip.file("assets.json");
-            const newAssets: any[] = [];
+            const newAssets: Asset[] = [];
 
             if (assetsFile) {
                 const assetsText = await assetsFile.async("text");
@@ -64,7 +65,11 @@ export const Home = ({ onNavigate }: HomeProps) => {
                             name: meta.name,
                             type: meta.type,
                             fileData: blob,
-                            imageUrl: imageUrl
+                            imageUrl: imageUrl,
+                            tokenRole: resolveTokenRole(meta.tokenRole, meta.type),
+                            assetRole: resolveAssetRole(meta.assetRole, meta.type),
+                            lightRadius: resolveLightRadius(meta.lightRadius),
+                            playerConfig: meta.playerConfig
                         });
                     }
                 }
@@ -113,7 +118,15 @@ export const Home = ({ onNavigate }: HomeProps) => {
         zip.file("story.json", JSON.stringify({ story, scenes }, null, 2));
 
         // Add asset metadata
-        const assetMetadata = validAssets.map(a => ({ id: a.id, name: a.name, type: a.type }));
+        const assetMetadata = validAssets.map(a => ({
+            id: a.id,
+            name: a.name,
+            type: a.type,
+            tokenRole: a.tokenRole,
+            assetRole: a.assetRole,
+            lightRadius: a.lightRadius,
+            playerConfig: a.playerConfig
+        }));
         zip.file("assets.json", JSON.stringify(assetMetadata, null, 2));
 
         // Add asset files
@@ -175,6 +188,16 @@ export const Home = ({ onNavigate }: HomeProps) => {
                         </div>
                         <h3 className="text-xl font-cinzel text-fantasy-text group-hover:text-fantasy-gold transition-colors">Import ZIP</h3>
                     </label>
+
+                    <GlassPanel
+                        onClick={() => onNavigate('CONFIG_ASSETS')}
+                        className="h-72 flex flex-col items-center justify-center cursor-pointer hover:bg-fantasy-accent/5 group transition-all border-dashed border-2 border-fantasy-muted/20 hover:border-fantasy-accent"
+                    >
+                        <div className="w-16 h-16 rounded-full bg-fantasy-accent/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-fantasy-accent/20">
+                            <Settings className="w-8 h-8 text-fantasy-accent" />
+                        </div>
+                        <h3 className="text-xl font-cinzel text-fantasy-text group-hover:text-fantasy-accent transition-colors">Config Assets</h3>
+                    </GlassPanel>
 
                     {/* List Stories */}
                     {stories?.map(story => (
@@ -246,7 +269,7 @@ export const Home = ({ onNavigate }: HomeProps) => {
             </div>
 
             <span className="fixed bottom-4 right-4 text-fantasy-muted/50 text-xs tracking-wider z-10 select-none">
-                v1.1.1
+                v1.2.0
             </span>
         </div>
     );

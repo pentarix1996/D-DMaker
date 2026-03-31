@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Home } from '@/features/home/Home';
 import { EditorView } from '@/features/editor/EditorView';
 import { PlayerView } from '@/features/player/PlayerView';
+import { ConfigAssetsView } from '@/features/config/ConfigAssetsView';
 import { useGameStore } from '@/store/gameStore';
 
 function App() {
-  const [view, setView] = useState<'HOME' | 'EDITOR' | 'PLAYER'>('HOME');
+  const [view, setView] = useState<'HOME' | 'EDITOR' | 'PLAYER' | 'CONFIG_ASSETS'>('HOME');
   const { setEditMode } = useGameStore();
 
-  const handleNavigate = (target: 'EDITOR' | 'PLAYER') => {
+  const handleNavigate = (target: 'EDITOR' | 'PLAYER' | 'CONFIG_ASSETS') => {
     setEditMode(target === 'EDITOR');
     setView(target);
   };
@@ -18,6 +19,7 @@ function App() {
       {view === 'HOME' && <Home onNavigate={handleNavigate} />}
       {view === 'EDITOR' && <EditorView onNavigate={() => setView('HOME')} />}
       {view === 'PLAYER' && <PlayerView onNavigate={() => setView('HOME')} />}
+      {view === 'CONFIG_ASSETS' && <ConfigAssetsView onNavigate={() => setView('HOME')} />}
     </div>
   );
 }

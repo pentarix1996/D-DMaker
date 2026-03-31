@@ -37,3 +37,6 @@ saves/
 coverage/
 .cache/
 *.tsbuildinfo
+
+# Agent Teams Lite (infrastructure)
+.atl/

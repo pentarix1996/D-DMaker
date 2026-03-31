@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db';
-import type { AssetType } from '@/types';
+import type { Asset, AssetType } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useAssets = (type?: AssetType | AssetType[]) => {
@@ -15,20 +15,28 @@ export const useAssets = (type?: AssetType | AssetType[]) => {
 
     const addAsset = async (file: File, type: AssetType) => {
         const id = uuidv4();
-
-
-        // We only store persistent data
-        await db.assets.add({
+        const base: Asset = {
             id,
             name: file.name,
             type,
             fileData: file,
-            imageUrl: '' // Placeholder, or we exclude it from DB type
-        });
+            imageUrl: '',
+            tokenRole: type === 'token' ? 'enemy' : undefined,
+            assetRole: type === 'asset' ? 'common' : undefined,
+            lightRadius: 0,
+            playerConfig: undefined
+        };
+
+        // We only store persistent data
+        await db.assets.add(base);
     };
 
     const deleteAsset = async (id: string) => {
         await db.assets.delete(id);
+    };
+
+    const updateAsset = async (id: string, updates: Partial<Asset>) => {
+        await db.assets.update(id, updates);
     };
 
     // Helper to get URL from blob (React component should handle this, or we return a wrapper)
@@ -45,6 +53,7 @@ export const useAssets = (type?: AssetType | AssetType[]) => {
         assets: assetsWithUrls ?? [],
         addAsset,
         deleteAsset,
+        updateAsset,
         isLoading: !assets
     };
 };

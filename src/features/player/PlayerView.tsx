@@ -230,7 +230,7 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
 
             {/* Main Stage */}
             <div className="w-full h-full relative z-0">
-                <EditorCanvas />
+                <EditorCanvas fogEditMode={false} />
             </div>
 
             {/* Float Widgets (Interactive even when idle if desired, or let them fade) */}

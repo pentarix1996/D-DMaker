@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Version](https://img.shields.io/badge/Version-1.2.0-brightgreen)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.3.0-brightgreen)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **DungeonFrame** is a web-based visual engine designed for **Dungeon Masters** and storytellers who want to build, edit, and present immersive tabletop RPG scenes — all from the browser, with zero server dependencies.
@@ -18,6 +18,16 @@
 🇪🇸 **[Leer en Español](README-ES.md)**
 
 </div>
+
+---
+
+## 🆕 What's New in 1.3.0
+
+- **Shop maps**: Configure maps as `Shop` with full catalogs for weapons, armor and objects.
+- **Player shop improvements**: Item type tabs, complete item details, optional disclaimers, and out-of-stock visual state.
+- **Session stock behavior**: Shop stock now persists across scene changes during play, but resets when re-entering a story.
+- **Player scene picker layout**: Changed to 2 columns with vertical scrolling.
+- **Default asset seed**: Added built-in `Escudo basico` asset.
 
 ---
 
@@ -40,7 +50,7 @@
 | ⚡ **Lazy Loading** | Performance optimization by deferring vault bundle |
 | 🗑️ **Quick Delete** | Tokens can be deleted in real-time during gameplay |
 | 🎲 **Integrated Dice** | Interactive floating panel to roll dice (d4 to d20) |
-| ⚔️ **Initiative Tracker** | Integrated turn tracking system for combat |
+| 🛒 **Shop System** | Configure map-based shops with item catalogs and buy flow in Player mode |
 
 ---
 

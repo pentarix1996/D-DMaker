@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 🇪🇸 **[Leer en Español](CHANGELOG-ES.md)**
 
+## [1.3.0] - 2026-04-04
+
+### Added
+
+- **Shop System for Maps**: Added `Common`/`Shop` map types with configurable shop catalog items (weapons, armor, objects), detailed properties, pricing (CP/SP/GP/PP), quantity and optional images.
+- **Shop Experience in Player Mode**: Added shop tabs by item type, item detail rendering, optional disclaimer toggle, and visual out-of-stock state.
+- **Default Asset Seed**: Added a new built-in default `asset` (`Escudo basico`) to first-run/incremental seed.
+
+### Changed
+
+- **Scene Picker Layout (Player)**: Scene menu now uses 2 columns with vertical expansion/scroll.
+- **Shop Stock Scope**: Buying items now updates stock only for the active play session (persists while switching scenes, resets when re-entering the story).
+
+### Removed
+
+- **Combat Widget in Player**: Removed initiative/combat panel from Player mode (handled externally in Dungeon Master).
+
 ## [1.2.0] - 2026-03-31
 
 ### Added

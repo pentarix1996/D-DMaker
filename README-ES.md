@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Versión](https://img.shields.io/badge/Versión-1.2.0-brightgreen)](CHANGELOG-ES.md)
+[![Versión](https://img.shields.io/badge/Versión-1.3.0-brightgreen)](CHANGELOG-ES.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **DungeonFrame** es un motor visual web diseñado para **Dungeon Masters** y narradores que quieren construir, editar y presentar escenas inmersivas de RPG de mesa — todo desde el navegador, sin ninguna dependencia de servidor.
@@ -18,6 +18,16 @@
 🇬🇧 **[Read in English](README.md)**
 
 </div>
+
+---
+
+## 🆕 Novedades en 1.3.0
+
+- **Mapas tienda**: Los mapas se pueden configurar como `Shop` con catálogos completos de armas, armaduras y objetos.
+- **Mejoras de tienda en Jugador**: Pestañas por tipo de item, detalle completo de cada item, avisos opcionales y estado visual de agotado.
+- **Comportamiento de stock por sesión**: El stock de tienda se mantiene al cambiar de escena durante la partida, pero se reinicia al volver a entrar en la historia.
+- **Layout de selector de escenas en Jugador**: Cambiado a 2 columnas con scroll vertical.
+- **Asset por defecto**: Se añadió `Escudo basico` al seed inicial de assets.
 
 ---
 
@@ -40,7 +50,7 @@
 | ⚡ **Carga Diferida (Lazy Load)** | Optimización de rendimiento y bundle diferiendo la bóveda |
 | 🗑️ **Eliminación Rápida** | Los tokens pueden ser eliminados en tiempo real durante la partida |
 | 🎲 **Dados Integrados** | Panel flotante interactivo para realizar tiradas (d4 a d20) |
-| ⚔️ **Rastreador de Iniciativa** | Sistema integrado de seguimiento de turnos para combates |
+| 🛒 **Sistema de Tiendas** | Configura tiendas por mapa con catálogos de items y flujo de compra en modo Jugador |
 
 ---
 

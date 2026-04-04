@@ -7,6 +7,23 @@ y este proyecto sigue [Versionado Semántico](https://semver.org/lang/es/).
 
 🇬🇧 **[Read in English](CHANGELOG.md)**
 
+## [1.3.0] - 2026-04-04
+
+### Añadido
+
+- **Sistema de Tiendas para Mapas**: Nuevos tipos de mapa `Común`/`Shop` con catálogo configurable de tienda (armas, armaduras, objetos), propiedades detalladas, precios (CP/SP/GP/PP), cantidad e imágenes opcionales.
+- **Experiencia de Tienda en Modo Jugador**: Nuevas pestañas por tipo de objeto, renderizado de detalles completos, toggle de avisos y estado visual para objetos agotados.
+- **Seed de Asset por Defecto**: Nuevo `asset` por defecto integrado (`Escudo basico`) en la carga inicial/incremental.
+
+### Cambiado
+
+- **Layout de Escenas (Jugador)**: El menú de escenas ahora usa 2 columnas con expansión/scroll vertical.
+- **Alcance del Stock de Tienda**: Las compras ahora modifican el stock solo en la sesión de juego activa (se mantiene al cambiar de escena y se reinicia al volver a entrar en la historia).
+
+### Eliminado
+
+- **Panel de Combate en Jugador**: Eliminado el panel de iniciativa/combate del modo Jugador (se gestiona externamente en Dungeon Master).
+
 ## [1.2.0] - 2026-03-31
 
 ### Añadido

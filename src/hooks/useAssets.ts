@@ -24,7 +24,9 @@ export const useAssets = (type?: AssetType | AssetType[]) => {
             tokenRole: type === 'token' ? 'enemy' : undefined,
             assetRole: type === 'asset' ? 'common' : undefined,
             lightRadius: 0,
-            playerConfig: undefined
+            playerConfig: undefined,
+            mapKind: type === 'map' ? 'common' : undefined,
+            shopCatalog: type === 'map' ? [] : undefined
         };
 
         // We only store persistent data

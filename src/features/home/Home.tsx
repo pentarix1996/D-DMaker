@@ -8,7 +8,7 @@ import { Play, Plus, Trash2, Upload, Download, Edit2, Settings } from 'lucide-re
 import type { Asset, Story } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useGameStore } from '@/store/gameStore';
-import { resolveAssetRole, resolveLightRadius, resolveTokenRole } from '@/lib/assetConfig';
+import { resolveAssetRole, resolveLightRadius, resolveMapKind, resolveShopCatalog, resolveTokenRole } from '@/lib/assetConfig';
 
 interface HomeProps {
     onNavigate: (view: 'EDITOR' | 'PLAYER' | 'CONFIG_ASSETS') => void;
@@ -69,7 +69,9 @@ export const Home = ({ onNavigate }: HomeProps) => {
                             tokenRole: resolveTokenRole(meta.tokenRole, meta.type),
                             assetRole: resolveAssetRole(meta.assetRole, meta.type),
                             lightRadius: resolveLightRadius(meta.lightRadius),
-                            playerConfig: meta.playerConfig
+                            playerConfig: meta.playerConfig,
+                            mapKind: resolveMapKind(meta.mapKind, meta.type),
+                            shopCatalog: resolveShopCatalog(meta.shopCatalog, meta.type)
                         });
                     }
                 }
@@ -125,7 +127,9 @@ export const Home = ({ onNavigate }: HomeProps) => {
             tokenRole: a.tokenRole,
             assetRole: a.assetRole,
             lightRadius: a.lightRadius,
-            playerConfig: a.playerConfig
+            playerConfig: a.playerConfig,
+            mapKind: a.mapKind,
+            shopCatalog: a.shopCatalog
         }));
         zip.file("assets.json", JSON.stringify(assetMetadata, null, 2));
 
@@ -269,7 +273,7 @@ export const Home = ({ onNavigate }: HomeProps) => {
             </div>
 
             <span className="fixed bottom-4 right-4 text-fantasy-muted/50 text-xs tracking-wider z-10 select-none">
-                v1.2.0
+                v1.3.0
             </span>
         </div>
     );

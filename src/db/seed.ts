@@ -10,6 +10,7 @@ interface ManifestEntry {
 interface Manifest {
     maps: ManifestEntry[];
     tokens: ManifestEntry[];
+    assets?: ManifestEntry[];
 }
 
 async function fetchAsset(path: string, name: string, type: AssetType): Promise<Asset> {
@@ -45,6 +46,11 @@ export async function seedDefaultAssets(): Promise<void> {
         for (const entry of manifest.tokens) {
             if (await assetExistsByName(entry.name, 'token')) continue;
             newAssets.push(await fetchAsset(`/assets/tokens/${entry.file}`, entry.name, 'token'));
+        }
+
+        for (const entry of manifest.assets ?? []) {
+            if (await assetExistsByName(entry.name, 'asset')) continue;
+            newAssets.push(await fetchAsset(`/assets/assets/${entry.file}`, entry.name, 'asset'));
         }
 
         if (newAssets.length > 0) {

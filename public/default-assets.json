@@ -18,5 +18,11 @@
             "file": "enemy_02.webp",
             "name": "Enemy 2"
         }
+    ],
+    "assets": [
+        {
+            "file": "escudo_basico.webp",
+            "name": "Escudo basico"
+        }
     ]
 }

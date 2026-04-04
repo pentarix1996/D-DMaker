@@ -7,7 +7,9 @@ import type { Scene } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const Timeline = () => {
-    const { scenes, activeSceneId, setActiveScene, addScene, updateScene, deleteScene, activeStory } = useGameStore();
+    const { scenes, activeSceneId, setActiveScene, addScene, updateScene, deleteScene, reorderScenes, activeStory } = useGameStore();
+    const [draggedSceneId, setDraggedSceneId] = React.useState<string | null>(null);
+    const [dragOverSceneId, setDragOverSceneId] = React.useState<string | null>(null);
 
     const handleAddScene = () => {
         if (!activeStory) return;
@@ -33,16 +35,57 @@ export const Timeline = () => {
         }
     };
 
+    const handleSceneDrop = (targetSceneId: string) => {
+        if (!draggedSceneId || draggedSceneId === targetSceneId) {
+            setDraggedSceneId(null);
+            setDragOverSceneId(null);
+            return;
+        }
+
+        const orderedIds = scenes.map((scene) => scene.id);
+        const from = orderedIds.indexOf(draggedSceneId);
+        const to = orderedIds.indexOf(targetSceneId);
+
+        if (from === -1 || to === -1) {
+            setDraggedSceneId(null);
+            setDragOverSceneId(null);
+            return;
+        }
+
+        orderedIds.splice(from, 1);
+        orderedIds.splice(to, 0, draggedSceneId);
+        reorderScenes(orderedIds);
+        setDraggedSceneId(null);
+        setDragOverSceneId(null);
+    };
+
     return (
         <div className="h-40 bg-fantasy-dark/95 border-t border-white/5 flex flex-col backdrop-blur-md">
             <div className="flex-1 flex overflow-x-auto p-4 gap-4 items-center">
                 {scenes.map((scene, index) => (
                     <div
                         key={scene.id}
+                        draggable
+                        onDragStart={() => setDraggedSceneId(scene.id)}
+                        onDragEnd={() => {
+                            setDraggedSceneId(null);
+                            setDragOverSceneId(null);
+                        }}
+                        onDragOver={(e) => {
+                            e.preventDefault();
+                            if (dragOverSceneId !== scene.id) {
+                                setDragOverSceneId(scene.id);
+                            }
+                        }}
+                        onDrop={(e) => {
+                            e.preventDefault();
+                            handleSceneDrop(scene.id);
+                        }}
                         onClick={() => setActiveScene(scene.id)}
                         className={cn(
                             "flex-shrink-0 w-48 h-28 rounded-xl border transition-all cursor-pointer relative group overflow-hidden bg-black/50",
-                            activeSceneId === scene.id ? "border-fantasy-gold shadow-[0_0_15px_rgba(255,215,0,0.2)]" : "border-white/5 hover:border-white/20"
+                            activeSceneId === scene.id ? "border-fantasy-gold shadow-[0_0_15px_rgba(255,215,0,0.2)]" : "border-white/5 hover:border-white/20",
+                            dragOverSceneId === scene.id && draggedSceneId !== scene.id && "border-fantasy-accent"
                         )}
                     >
                         {/* Scene Number */}

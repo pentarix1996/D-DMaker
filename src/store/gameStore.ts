@@ -19,6 +19,7 @@ interface GameState {
     addScene: (scene: Scene) => void;
     updateScene: (sceneId: string, updates: Partial<Scene>) => void;
     deleteScene: (sceneId: string) => void;
+    reorderScenes: (orderedSceneIds: string[]) => void;
 
     // Helpers
     getCurrentScene: () => Scene | undefined;
@@ -52,6 +53,22 @@ export const useGameStore = create<GameState>((set, get) => ({
         scenes: state.scenes.filter(s => s.id !== id),
         activeSceneId: state.activeSceneId === id ? null : state.activeSceneId
     })),
+
+    reorderScenes: (orderedSceneIds) => set((state) => {
+        const sceneMap = new Map(state.scenes.map((scene) => [scene.id, scene]));
+        const reordered = orderedSceneIds
+            .map((id) => sceneMap.get(id))
+            .filter((scene): scene is Scene => Boolean(scene))
+            .map((scene, index) => ({ ...scene, order: index }));
+
+        const missing = state.scenes
+            .filter((scene) => !orderedSceneIds.includes(scene.id))
+            .map((scene, index) => ({ ...scene, order: reordered.length + index }));
+
+        return {
+            scenes: [...reordered, ...missing]
+        };
+    }),
 
     getCurrentScene: () => {
         const { scenes, activeSceneId } = get();

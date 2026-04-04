@@ -343,11 +343,11 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
             </div>
 
             {currentMapAsset?.mapKind === 'shop' && (
-                <div className="fixed right-6 top-24 z-40 w-80 max-h-[70vh] overflow-hidden bg-fantasy-dark/95 border border-white/10 backdrop-blur-md rounded-lg">
-                    <div className="p-3 border-b border-white/10">
-                        <h3 className="text-fantasy-gold font-cinzel text-sm uppercase tracking-wider">Tienda</h3>
+                <div className="fixed right-6 top-24 z-40 w-[550px] max-h-[85vh] overflow-hidden bg-fantasy-dark/95 border border-white/10 backdrop-blur-md rounded-lg">
+                    <div className="p-4 border-b border-white/10">
+                        <h3 className="text-fantasy-gold font-cinzel text-base uppercase tracking-wider">Tienda</h3>
                     </div>
-                    <div className="p-3 max-h-[60vh] overflow-y-auto space-y-2">
+                    <div className="p-4 max-h-[75vh] overflow-y-auto space-y-3">
                         <Button
                             size="sm"
                             variant="secondary"
@@ -394,68 +394,67 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
                         {filteredShopCatalog.map((item) => {
                             const imageAsset = item.imageAssetId ? visualAssets.find((asset) => asset.id === item.imageAssetId) : undefined;
                             return (
-                            <div key={item.id} className={cn("border border-white/10 rounded-lg p-2 bg-black/20", getItemStock(item) <= 0 && "opacity-50 grayscale")}>
-                                <div className="flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-2">
+                            <div key={item.id} className={cn("border border-white/10 rounded-lg p-4 bg-black/20", getItemStock(item) <= 0 && "opacity-50 grayscale")}>
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-3">
                                         {imageAsset && (
-                                            <img src={imageAsset.imageUrl} alt={item.name} className="w-10 h-10 rounded object-cover border border-white/10" />
+                                            <img src={imageAsset.imageUrl} alt={item.name} className="w-16 h-16 rounded object-cover border border-white/10 shadow-md" />
                                         )}
                                         <div>
-                                        <p className="text-sm text-fantasy-text">{item.name}</p>
-                                        <p className="text-xs text-fantasy-muted uppercase">{getItemTypeLabel(item.type)}</p>
+                                        <p className="text-base font-semibold text-fantasy-text tracking-wide">{item.name}</p>
+                                        <p className="text-sm text-fantasy-muted uppercase">{getItemTypeLabel(item.type)}</p>
                                         </div>
                                     </div>
-                                    <span className="text-xs text-fantasy-muted">Cantidad: {getItemStock(item)}</span>
+                                    <span className="text-sm text-fantasy-muted font-medium">Cantidad: {getItemStock(item)}</span>
                                 </div>
-                                <div className="text-xs text-fantasy-muted mt-1">
+                                <div className="text-sm text-fantasy-gold mt-3 font-medium">
                                     Precio: {formatPrice(item)}
                                 </div>
                                 {item.type === 'weapon' && (
-                                    <div className="text-xs text-fantasy-muted mt-1 space-y-1">
-                                        <p>Dano: {item.damageDiceCount}{item.damageDie} ({damageTypeLabel[item.damageType]})</p>
+                                    <div className="text-sm text-fantasy-text/80 mt-2 space-y-1.5 bg-black/30 p-3 rounded-md border border-white/5">
+                                        <p>Dano: <span className="text-fantasy-text">{item.damageDiceCount}{item.damageDie}</span> ({damageTypeLabel[item.damageType]})</p>
                                         {getWeaponProperties(item).length > 0 && (
-                                            <p>Propiedades: {getWeaponProperties(item).join(', ')}</p>
+                                            <p>Propiedades: <span className="text-fantasy-text">{getWeaponProperties(item).join(', ')}</span></p>
                                         )}
                                         {typeof item.weightKg === 'number' && (
-                                            <p>Peso: {item.weightKg} Kg</p>
+                                            <p>Peso: <span className="text-fantasy-text">{item.weightKg} Kg</span></p>
                                         )}
                                     </div>
                                 )}
                                 {item.type === 'armor' && (
-                                    <div className="text-xs text-fantasy-muted mt-1 space-y-1">
-                                        <p>Tipo: {armorTypeLabel[item.armorType]}</p>
+                                    <div className="text-sm text-fantasy-text/80 mt-2 space-y-1.5 bg-black/30 p-3 rounded-md border border-white/5">
+                                        <p>Tipo: <span className="text-fantasy-text">{armorTypeLabel[item.armorType]}</span></p>
                                         <p>
-                                            CA: {item.armorClass}
+                                            CA: <span className="text-fantasy-text">{item.armorClass}</span>
                                             {item.armorClassModifier?.ability ? ` + Mod ${abilityLabel[item.armorClassModifier.ability]}` : ''}
                                             {typeof item.armorClassModifier?.maxBonus === 'number' ? ` (Max ${item.armorClassModifier.maxBonus})` : ''}
                                         </p>
                                         {typeof item.requiredStrength === 'number' && (
-                                            <p>Fuerza requerida: {item.requiredStrength}</p>
+                                            <p>Fuerza requerida: <span className="text-fantasy-text">{item.requiredStrength}</span></p>
                                         )}
-                                        <p>Sigilo: {item.stealth === 'disadvantage' ? 'Desventaja' : 'Nada'}</p>
+                                        <p>Sigilo: <span className="text-fantasy-text">{item.stealth === 'disadvantage' ? 'Desventaja' : 'Nada'}</span></p>
                                         {typeof item.weightKg === 'number' && (
-                                            <p>Peso: {item.weightKg} Kg</p>
+                                            <p>Peso: <span className="text-fantasy-text">{item.weightKg} Kg</span></p>
                                         )}
                                     </div>
                                 )}
                                 {item.type === 'object' && (
-                                    <div className="text-xs text-fantasy-muted mt-1 space-y-1">
+                                    <div className="text-sm text-fantasy-text/80 mt-2 space-y-1.5 bg-black/30 p-3 rounded-md border border-white/5">
                                         {item.description && (
-                                            <p>Descripcion: {item.description}</p>
+                                            <p>Descripcion: <span className="text-fantasy-text">{item.description}</span></p>
                                         )}
                                         {typeof item.weightKg === 'number' && (
-                                            <p>Peso: {item.weightKg} Kg</p>
+                                            <p>Peso: <span className="text-fantasy-text">{item.weightKg} Kg</span></p>
                                         )}
                                     </div>
                                 )}
-                                <div className="mt-2">
+                                <div className="mt-4 flex justify-end">
                                     <Button
-                                        size="sm"
                                         variant="secondary"
                                         disabled={getItemStock(item) <= 0}
                                         onClick={() => { void handleBuyShopItem(item.id); }}
                                     >
-                                        Comprar
+                                        Comprar artículo
                                     </Button>
                                 </div>
                             </div>

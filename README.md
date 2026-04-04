@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Version](https://img.shields.io/badge/Version-1.3.0-brightgreen)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.3.1-brightgreen)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **DungeonFrame** is a web-based visual engine designed for **Dungeon Masters** and storytellers who want to build, edit, and present immersive tabletop RPG scenes — all from the browser, with zero server dependencies.
@@ -21,13 +21,13 @@
 
 ---
 
-## 🆕 What's New in 1.3.0
+## 🆕 What's New in 1.3.1
 
-- **Shop maps**: Configure maps as `Shop` with full catalogs for weapons, armor and objects.
-- **Player shop improvements**: Item type tabs, complete item details, optional disclaimers, and out-of-stock visual state.
-- **Session stock behavior**: Shop stock now persists across scene changes during play, but resets when re-entering a story.
-- **Player scene picker layout**: Changed to 2 columns with vertical scrolling.
-- **Default asset seed**: Added built-in `Escudo basico` asset.
+- **Vault folders**: Organize maps, tokens and assets with folder navigation in Edit and Player modes.
+- **Shop templates**: Configure reusable shop templates and assign them from `Shop` maps.
+- **Extended ZIP import/export**: Includes shop templates, vault folder tree and indirect image references used by template items.
+- **Vault tab UX fix**: `Assets` are grouped inside `Tokens` to keep `Tracks` layout clean.
+- **Default seed organization**: Goblin default tokens now start inside a `Goblins` folder.
 
 ---
 
@@ -40,6 +40,8 @@
 | 🎮 **Player Mode** | Fullscreen presentation mode with scene navigation and ambient audio |
 | 📦 **Asset Vault** | Upload and organize maps, tokens and audio tracks |
 | ⚙️ **Config Assets** | Configure token/asset types, player metadata and light radius from Home |
+| 🧩 **Shop Templates** | Create reusable shop templates and assign them to `Shop` maps |
+| 🗂️ **Vault Folders** | Organize maps, tokens and assets with folder navigation in Vault |
 | 🔲 **Configurable Grid** | Toggle grid overlay with custom color and size per scene |
 | 🌫️ **Fog of War** | Paint and erase fog in Editor, reveal explored areas in Player mode |
 | 🎵 **Scene Audio** | Attach ambient music to each scene with auto-loop playback |

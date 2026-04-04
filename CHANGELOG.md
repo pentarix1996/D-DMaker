@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 🇪🇸 **[Leer en Español](CHANGELOG-ES.md)**
 
+## [1.3.1] - 2026-04-04
+
+### Added
+
+- **Vault Folders**: Added folder navigation and management in Vault for maps, tokens and assets in both Edit and Player modes.
+- **Shop Templates**: Added dedicated shop templates configuration and map-level template assignment for `Shop` maps.
+
+### Changed
+
+- **Shop Export/Import Scope**: ZIP export/import now includes vault folder tree, shop templates and indirect asset references used by template item images.
+- **Vault Navigation UX**: `Tracks` layout was fixed by keeping `Assets` under `Tokens`, with sub-tabs for `Tokens` and `Assets`.
+- **Default Token Organization**: Seeded default goblin tokens now start inside a `Goblins` folder.
+
 ## [1.3.0] - 2026-04-04
 
 ### Added
@@ -37,8 +50,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Versioning**: Project version bumped to `1.2.0` across package metadata and UI version indicator.
-- **Player Interactions**: Tokens can now be moved/edited in Player mode; interaction lock is restricted to fog edit mode in Editor.
 - **Lighting Balance**: Light radius effectiveness was reduced to avoid over-revealing fog at medium values.
 
 ### Fixed

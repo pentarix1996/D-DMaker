@@ -7,6 +7,19 @@ y este proyecto sigue [Versionado Semántico](https://semver.org/lang/es/).
 
 🇬🇧 **[Read in English](CHANGELOG.md)**
 
+## [1.3.1] - 2026-04-04
+
+### Añadido
+
+- **Carpetas en Vault**: Se añadió navegación y gestión de carpetas en Vault para mapas, tokens y assets tanto en Editar como en Jugar.
+- **Plantillas de Tienda**: Se añadió configuración dedicada de plantillas de tienda y asignación de plantilla a mapas de tipo `Shop`.
+
+### Cambiado
+
+- **Alcance de Export/Import de Tiendas**: El ZIP ahora incluye árbol de carpetas del vault, plantillas de tienda y referencias indirectas de assets usadas por imágenes de items en plantillas.
+- **UX de Navegación en Vault**: Se corrigió la visualización de `Tracks` dejando `Assets` dentro de `Tokens`, con subpestañas `Tokens` y `Assets`.
+- **Organización de Tokens por Defecto**: Los tokens goblin del seed ahora se crean dentro de la carpeta `Goblins`.
+
 ## [1.3.0] - 2026-04-04
 
 ### Añadido
@@ -37,8 +50,6 @@ y este proyecto sigue [Versionado Semántico](https://semver.org/lang/es/).
 
 ### Cambiado
 
-- **Versionado**: Versión del proyecto actualizada a `1.2.0` en metadatos y en el indicador visual de la app.
-- **Interacciones en Jugador**: Los tokens ahora se pueden mover/editar en modo Jugador; el bloqueo de interacción queda limitado al modo de edición de niebla en Editor.
 - **Balance de Iluminación**: Se redujo la efectividad del radio de luz para evitar revelar demasiada niebla con valores medios.
 
 ### Corregido

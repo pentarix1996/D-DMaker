@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Versión](https://img.shields.io/badge/Versión-1.3.0-brightgreen)](CHANGELOG-ES.md)
+[![Versión](https://img.shields.io/badge/Versión-1.3.1-brightgreen)](CHANGELOG-ES.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **DungeonFrame** es un motor visual web diseñado para **Dungeon Masters** y narradores que quieren construir, editar y presentar escenas inmersivas de RPG de mesa — todo desde el navegador, sin ninguna dependencia de servidor.
@@ -21,13 +21,13 @@
 
 ---
 
-## 🆕 Novedades en 1.3.0
+## 🆕 Novedades en 1.3.1
 
-- **Mapas tienda**: Los mapas se pueden configurar como `Shop` con catálogos completos de armas, armaduras y objetos.
-- **Mejoras de tienda en Jugador**: Pestañas por tipo de item, detalle completo de cada item, avisos opcionales y estado visual de agotado.
-- **Comportamiento de stock por sesión**: El stock de tienda se mantiene al cambiar de escena durante la partida, pero se reinicia al volver a entrar en la historia.
-- **Layout de selector de escenas en Jugador**: Cambiado a 2 columnas con scroll vertical.
-- **Asset por defecto**: Se añadió `Escudo basico` al seed inicial de assets.
+- **Carpetas en Vault**: Organización y navegación por carpetas para mapas, tokens y assets en Editar y Jugar.
+- **Plantillas de tienda**: Configuración de plantillas reutilizables y asignación desde mapas tipo `Shop`.
+- **Import/Export ZIP ampliado**: Incluye plantillas de tienda, árbol de carpetas del vault y referencias indirectas de imágenes usadas por items de plantillas.
+- **Ajuste de pestañas en Vault**: `Assets` se agrupan dentro de `Tokens` para mantener correcta la sección `Tracks`.
+- **Organización del seed por defecto**: Los tokens goblin iniciales se crean dentro de la carpeta `Goblins`.
 
 ---
 
@@ -40,6 +40,8 @@
 | 🎮 **Modo Jugador** | Modo presentación a pantalla completa con navegación entre escenas y audio ambiente |
 | 📦 **Bóveda de Assets** | Subir y organizar mapas, tokens y pistas de audio |
 | ⚙️ **Config Assets** | Configurar tipos de token/asset, metadatos de player y radio de luz desde Home |
+| 🧩 **Plantillas de Tienda** | Crear plantillas reutilizables de tienda y asignarlas a mapas `Shop` |
+| 🗂️ **Carpetas en Vault** | Organizar mapas, tokens y assets con navegación por carpetas en la bóveda |
 | 🔲 **Cuadrícula Configurable** | Overlay de cuadrícula con color y tamaño personalizable por escena |
 | 🌫️ **Niebla de Guerra** | Pintar y borrar niebla en Editor, revelar zonas exploradas en modo Jugador |
 | 🎵 **Audio por Escena** | Asociar música ambiental a cada escena con reproducción en bucle |

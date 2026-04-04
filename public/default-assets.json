@@ -24,19 +24,38 @@
     "assets": [
         {
             "file": "basic_shield.webp",
-            "name": "Escudo basico"
+            "name": "Escudo basico",
+            "folderPath": "Armors"
         },
         {
             "file": "common_sword.webp",
-            "name": "Espada común"
+            "name": "Espada común",
+            "folderPath": "Weapons"
         },
         {
             "file": "low_hp_potion.webp",
-            "name": "Poción de vida baja"
+            "name": "Poción de vida baja",
+            "folderPath": "Objects"
         },
         {
             "file": "one_hand_axe.webp",
-            "name": "Hacha de una mano"
+            "name": "Hacha de una mano",
+            "folderPath": "Weapons"
+        },
+        {
+            "file": "leather_ armor.webp",
+            "name": "Armadura de cuero",
+            "folderPath": "Armors"
+        },
+        {
+            "file": "shortbow.webp",
+            "name": "Arco corto",
+            "folderPath": "Weapons"
+        },
+        {
+            "file": "wooden_arrow.webp",
+            "name": "Flecha de madera",
+            "folderPath": "Objects"
         }
     ]
 }

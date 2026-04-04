@@ -41,3 +41,9 @@ body {
 ::-webkit-scrollbar-thumb {
   @apply bg-fantasy-muted/20 rounded hover:bg-fantasy-muted/40;
 }
+
+/* Base styles for select elements to ensure dark theme across browsers */
+select option {
+  background-color: var(--color-fantasy-dark);
+  color: var(--color-fantasy-text);
+}

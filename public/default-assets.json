@@ -11,18 +11,30 @@
     ],
     "tokens": [
         {
-            "file": "enemy_01.webp",
-            "name": "Enemy"
+            "file": "common_goblin.webp",
+            "name": "Goblin común"
         },
         {
-            "file": "enemy_02.webp",
-            "name": "Enemy 2"
+            "file": "king_goblin.webp",
+            "name": "Rey Goblin"
         }
     ],
     "assets": [
         {
-            "file": "escudo_basico.webp",
+            "file": "basic_shield.webp",
             "name": "Escudo basico"
+        },
+        {
+            "file": "common_sword.webp",
+            "name": "Espada común"
+        },
+        {
+            "file": "low_hp_potion.webp",
+            "name": "Poción de vida baja"
+        },
+        {
+            "file": "one_hand_axe.webp",
+            "name": "Hacha de una mano"
         }
     ]
 }

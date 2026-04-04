@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { ChevronLeft, ChevronRight, Backpack, Menu, Maximize, Grid, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAssets } from '@/hooks/useAssets';
+import { useShopTemplates } from '@/hooks/useShopTemplates';
 import type { ShopCatalogItem, ShopItemType } from '@/types';
 
 interface PlayerViewProps {
@@ -18,6 +19,7 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
     const { scenes, activeSceneId, setActiveScene, getCurrentScene, updateScene } = useGameStore();
     const { assets: mapAssets } = useAssets('map');
     const { assets: visualAssets } = useAssets(['map', 'token', 'asset']);
+    const { templates } = useShopTemplates();
     const [showVault, setShowVault] = useState(false);
     const [showSceneMenu, setShowSceneMenu] = useState(false);
     const [isIdle, setIsIdle] = useState(false);
@@ -45,7 +47,10 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
     const currentScene = getCurrentScene();
     const currentIndex = scenes.findIndex(s => s.id === activeSceneId);
     const currentMapAsset = mapAssets.find((asset) => asset.id === currentScene?.backgroundAssetId);
-    const currentShopCatalog = currentMapAsset?.mapKind === 'shop' ? (currentMapAsset.shopCatalog ?? []) : [];
+    const selectedTemplate = currentMapAsset?.shopTemplateId ? templates.find((template) => template.id === currentMapAsset.shopTemplateId) : undefined;
+    const currentShopCatalog = currentMapAsset?.mapKind === 'shop'
+        ? (selectedTemplate?.items ?? currentMapAsset.shopCatalog ?? [])
+        : [];
     const filteredShopCatalog = currentShopCatalog.filter((item) => item.type === selectedShopType);
     const getItemTypeLabel = (type: string): string => {
         if (type === 'weapon') return 'Arma';
@@ -160,7 +165,7 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
         if (!currentMapAsset || currentMapAsset.mapKind !== 'shop') return;
         setSessionShopStock((prev) => {
             const next = { ...prev };
-            const target = (currentMapAsset.shopCatalog ?? []).find((item) => item.id === itemId);
+            const target = currentShopCatalog.find((item) => item.id === itemId);
             if (!target) return next;
             const key = `${currentMapAsset.id}:${itemId}`;
             const currentStock = typeof next[key] === 'number' ? next[key] : target.quantityAvailable;
@@ -174,7 +179,7 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
         if (!currentMapAsset || currentMapAsset.mapKind !== 'shop') return;
         setSessionShopStock((prev) => {
             const next = { ...prev };
-            for (const item of currentMapAsset.shopCatalog ?? []) {
+            for (const item of currentShopCatalog) {
                 const key = `${currentMapAsset.id}:${item.id}`;
                 if (typeof next[key] !== 'number') {
                     next[key] = item.quantityAvailable;
@@ -182,7 +187,7 @@ export const PlayerView = ({ onNavigate }: PlayerViewProps) => {
             }
             return next;
         });
-    }, [currentMapAsset?.id, currentMapAsset?.mapKind, currentMapAsset?.shopCatalog]);
+    }, [currentMapAsset?.id, currentMapAsset?.mapKind, currentShopCatalog]);
 
     // Audio Logic with Fade In/Out and Dynamic Blob Loading
     useEffect(() => {

@@ -76,6 +76,18 @@ export const resolveMapKind = (value: unknown, type: string): MapKind | undefine
     return 'common';
 };
 
+export const resolveFolderPath = (value: unknown): string => {
+    if (typeof value !== 'string') return '';
+    return value.trim();
+};
+
+export const resolveShopTemplateId = (value: unknown, type: string): string | undefined => {
+    if (type !== 'map') return undefined;
+    if (typeof value !== 'string') return undefined;
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+};
+
 export const resolveShopPrice = (value: unknown): ShopPrice => {
     const record = isObjectRecord(value) ? value : {};
     return {

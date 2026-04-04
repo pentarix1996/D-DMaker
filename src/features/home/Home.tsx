@@ -8,7 +8,7 @@ import { Play, Plus, Trash2, Upload, Download, Edit2, Settings } from 'lucide-re
 import type { Asset, Story } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useGameStore } from '@/store/gameStore';
-import { resolveAssetRole, resolveLightRadius, resolveMapKind, resolveShopCatalog, resolveTokenRole } from '@/lib/assetConfig';
+import { resolveAssetRole, resolveFolderPath, resolveLightRadius, resolveMapKind, resolveShopCatalog, resolveShopTemplateId, resolveTokenRole } from '@/lib/assetConfig';
 
 interface HomeProps {
     onNavigate: (view: 'EDITOR' | 'PLAYER' | 'CONFIG_ASSETS') => void;
@@ -48,6 +48,10 @@ export const Home = ({ onNavigate }: HomeProps) => {
             // Read asset metadata
             const assetsFile = zip.file("assets.json");
             const newAssets: Asset[] = [];
+            const templatesFile = zip.file("shop-templates.json");
+            const vaultFoldersFile = zip.file("vault-folders.json");
+            const importedTemplates = templatesFile ? JSON.parse(await templatesFile.async("text")) : [];
+            const importedVaultFolders = vaultFoldersFile ? JSON.parse(await vaultFoldersFile.async("text")) : [];
 
             if (assetsFile) {
                 const assetsText = await assetsFile.async("text");
@@ -70,7 +74,9 @@ export const Home = ({ onNavigate }: HomeProps) => {
                             assetRole: resolveAssetRole(meta.assetRole, meta.type),
                             lightRadius: resolveLightRadius(meta.lightRadius),
                             playerConfig: meta.playerConfig,
+                            folderPath: resolveFolderPath(meta.folderPath),
                             mapKind: resolveMapKind(meta.mapKind, meta.type),
+                            shopTemplateId: resolveShopTemplateId(meta.shopTemplateId, meta.type),
                             shopCatalog: resolveShopCatalog(meta.shopCatalog, meta.type)
                         });
                     }
@@ -78,11 +84,17 @@ export const Home = ({ onNavigate }: HomeProps) => {
             }
 
             if (story && Array.isArray(scenes)) {
-                await db.transaction('rw', db.stories, db.scenes, db.assets, async () => {
+                await db.transaction('rw', [db.stories, db.scenes, db.assets, db.shopTemplates, db.vaultFolders], async () => {
                     await db.stories.put(story);
                     await db.scenes.bulkPut(scenes);
                     if (newAssets.length > 0) {
                         await db.assets.bulkPut(newAssets);
+                    }
+                    if (Array.isArray(importedTemplates) && importedTemplates.length > 0) {
+                        await db.shopTemplates.bulkPut(importedTemplates);
+                    }
+                    if (Array.isArray(importedVaultFolders) && importedVaultFolders.length > 0) {
+                        await db.vaultFolders.bulkPut(importedVaultFolders);
                     }
                 });
             }
@@ -99,6 +111,8 @@ export const Home = ({ onNavigate }: HomeProps) => {
         if (!story) return;
 
         const scenes = await db.scenes.where('storyId').equals(storyId).toArray();
+        const shopTemplates = await db.shopTemplates.toArray();
+        const vaultFolders = await db.vaultFolders.toArray();
 
         // Collect all asset IDs used in scenes
         const assetIds = new Set<string>();
@@ -107,6 +121,11 @@ export const Home = ({ onNavigate }: HomeProps) => {
             if (scene.musicAssetId) assetIds.add(scene.musicAssetId);
             scene.tokens.forEach(token => assetIds.add(token.assetId));
         });
+        for (const template of shopTemplates) {
+            for (const item of template.items) {
+                if (item.imageAssetId) assetIds.add(item.imageAssetId);
+            }
+        }
 
         // Fetch assets from DB
         const assets = await Promise.all(
@@ -128,10 +147,14 @@ export const Home = ({ onNavigate }: HomeProps) => {
             assetRole: a.assetRole,
             lightRadius: a.lightRadius,
             playerConfig: a.playerConfig,
+            folderPath: a.folderPath,
             mapKind: a.mapKind,
+            shopTemplateId: a.shopTemplateId,
             shopCatalog: a.shopCatalog
         }));
         zip.file("assets.json", JSON.stringify(assetMetadata, null, 2));
+        zip.file("shop-templates.json", JSON.stringify(shopTemplates, null, 2));
+        zip.file("vault-folders.json", JSON.stringify(vaultFolders, null, 2));
 
         // Add asset files
         const assetsFolder = zip.folder("assets");
@@ -273,7 +296,7 @@ export const Home = ({ onNavigate }: HomeProps) => {
             </div>
 
             <span className="fixed bottom-4 right-4 text-fantasy-muted/50 text-xs tracking-wider z-10 select-none">
-                v1.3.0
+                v1.3.1
             </span>
         </div>
     );

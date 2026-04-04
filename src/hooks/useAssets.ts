@@ -3,7 +3,7 @@ import { db } from '@/db';
 import type { Asset, AssetType } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const useAssets = (type?: AssetType | AssetType[]) => {
+export const useAssets = (type?: AssetType | AssetType[], folderPath?: string) => {
     const assets = useLiveQuery(
         () => {
             if (!type) return db.assets.toArray();
@@ -13,7 +13,7 @@ export const useAssets = (type?: AssetType | AssetType[]) => {
         [Array.isArray(type) ? type.join(',') : type]
     );
 
-    const addAsset = async (file: File, type: AssetType) => {
+    const addAsset = async (file: File, type: AssetType, targetFolderPath = '') => {
         const id = uuidv4();
         const base: Asset = {
             id,
@@ -25,7 +25,9 @@ export const useAssets = (type?: AssetType | AssetType[]) => {
             assetRole: type === 'asset' ? 'common' : undefined,
             lightRadius: 0,
             playerConfig: undefined,
+            folderPath: targetFolderPath,
             mapKind: type === 'map' ? 'common' : undefined,
+            shopTemplateId: type === 'map' ? undefined : undefined,
             shopCatalog: type === 'map' ? [] : undefined
         };
 
@@ -49,7 +51,10 @@ export const useAssets = (type?: AssetType | AssetType[]) => {
         ...a,
         imageUrl: URL.createObjectURL(a.fileData) // Note: This creates a leak if not revamped. 
         // In a real app, use a dedicated component <AssetImage blob={a.fileData} /> to handle URL creation/revocation.
-    }));
+    })).filter((asset) => {
+        if (folderPath === undefined) return true;
+        return (asset.folderPath ?? '') === folderPath;
+    });
 
     return {
         assets: assetsWithUrls ?? [],

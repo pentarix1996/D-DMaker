@@ -87,6 +87,21 @@ export interface ShopObjectItem {
 }
 
 export type ShopCatalogItem = ShopWeaponItem | ShopArmorItem | ShopObjectItem;
+export type VaultFolderType = 'map' | 'token' | 'asset';
+
+export interface ShopTemplate {
+    id: string;
+    name: string;
+    items: ShopCatalogItem[];
+}
+
+export interface VaultFolder {
+    id: string;
+    type: VaultFolderType;
+    name: string;
+    path: string;
+    parentPath: string;
+}
 
 export interface PlayerConfig {
     name: string;
@@ -104,7 +119,9 @@ export interface Asset {
     assetRole?: AssetRole;
     lightRadius?: number;
     playerConfig?: PlayerConfig;
+    folderPath?: string;
     mapKind?: MapKind;
+    shopTemplateId?: string;
     shopCatalog?: ShopCatalogItem[];
 }
 

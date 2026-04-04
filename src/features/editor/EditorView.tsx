@@ -33,7 +33,7 @@ export const EditorView = ({ onNavigate }: EditorViewProps) => {
     return (
         <div className="h-screen w-screen overflow-hidden bg-fantasy-bg flex">
             {/* Vault (Fixed internally) */}
-            <Vault allowedTypes={['map', 'token', 'audio']} />
+            <Vault allowedTypes={['map', 'token', 'asset', 'audio']} />
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col ml-80 h-full min-h-0 overflow-hidden relative z-10">

@@ -12,11 +12,13 @@
     "tokens": [
         {
             "file": "common_goblin.webp",
-            "name": "Goblin común"
+            "name": "Goblin común",
+            "folderPath": "Goblins"
         },
         {
             "file": "king_goblin.webp",
-            "name": "Rey Goblin"
+            "name": "Rey Goblin",
+            "folderPath": "Goblins"
         }
     ],
     "assets": [

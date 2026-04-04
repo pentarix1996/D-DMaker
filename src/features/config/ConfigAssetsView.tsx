@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
-import { ArrowLeft, Upload } from 'lucide-react';
+import { ArrowLeft, Edit2, Trash2, Upload } from 'lucide-react';
 import { useAssets } from '@/hooks/useAssets';
+import { useShopTemplates } from '@/hooks/useShopTemplates';
 import { Button } from '@/components/ui/Button';
 import { GlassPanel } from '@/components/ui/GlassPanel';
 import type {
@@ -100,21 +101,40 @@ const createShopItem = (type: ShopItemType): ShopCatalogItem => {
 };
 
 export const ConfigAssetsView = ({ onNavigate }: ConfigAssetsViewProps) => {
+    const [section, setSection] = useState<'assets' | 'shops'>('assets');
     const [tab, setTab] = useState<AssetType>('map');
     const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+    const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
     const [selectedShopItemId, setSelectedShopItemId] = useState<string | null>(null);
     const [selectedShopType, setSelectedShopType] = useState<ShopItemType>('weapon');
     const { assets, addAsset, updateAsset } = useAssets(tab);
-    const { assets: imageAssets } = useAssets(['map', 'token', 'asset']);
-    const selectedAsset = useMemo<Asset | null>(() => {
+    const { assets: imageAssetsRaw } = useAssets('asset');
+    const { templates, addTemplate, updateTemplate, deleteTemplate } = useShopTemplates();
+    const imageAssets = useMemo(() => [...imageAssetsRaw].sort((a, b) => a.name.localeCompare(b.name)), [imageAssetsRaw]);
+    const selectedTemplate = useMemo(() => templates.find((template) => template.id === selectedTemplateId) ?? null, [templates, selectedTemplateId]);
+    const selectedAssetRaw = useMemo<Asset | null>(() => {
         if (!selectedAssetId) return null;
         return assets.find(asset => asset.id === selectedAssetId) ?? null;
     }, [assets, selectedAssetId]);
+    const selectedAsset = useMemo<Asset | null>(() => {
+        if (section === 'shops' && selectedTemplate) {
+            return {
+                id: selectedTemplate.id,
+                name: selectedTemplate.name,
+                type: 'map',
+                fileData: new Blob(),
+                imageUrl: '',
+                mapKind: 'shop',
+                shopCatalog: selectedTemplate.items
+            };
+        }
+        return selectedAssetRaw;
+    }, [section, selectedTemplate, selectedAssetRaw]);
     const tokenRole = (selectedAsset?.tokenRole ?? 'enemy') as TokenRole;
     const assetRole = (selectedAsset?.assetRole ?? 'common') as AssetRole;
     const canUseLightRadius = canConfigureTokenLightRadius(tokenRole);
-    const mapKind = selectedAsset?.mapKind ?? 'common';
-    const shopCatalog = selectedAsset?.shopCatalog ?? [];
+    const mapKind = section === 'shops' ? 'shop' : (selectedAsset?.mapKind ?? 'common');
+    const shopCatalog = section === 'shops' ? (selectedTemplate?.items ?? []) : (selectedAsset?.shopCatalog ?? []);
     const filteredShopCatalog = shopCatalog.filter((item) => item.type === selectedShopType);
     const selectedShopItem = useMemo<ShopCatalogItem | null>(() => {
         if (!selectedShopItemId) return null;
@@ -122,11 +142,23 @@ export const ConfigAssetsView = ({ onNavigate }: ConfigAssetsViewProps) => {
     }, [selectedShopItemId, shopCatalog]);
 
     const updateSelectedAsset = (updates: Partial<Asset>) => {
+        if (section === 'shops') {
+            if (!selectedTemplate) return;
+            if (updates.shopCatalog) {
+                updateTemplate(selectedTemplate.id, { items: updates.shopCatalog });
+            }
+            return;
+        }
         if (!selectedAsset) return;
         updateAsset(selectedAsset.id, updates);
     };
 
     const updateShopCatalog = (nextCatalog: ShopCatalogItem[]) => {
+        if (section === 'shops') {
+            if (!selectedTemplate) return;
+            updateTemplate(selectedTemplate.id, { items: nextCatalog });
+            return;
+        }
         if (!selectedAsset || selectedAsset.type !== 'map') return;
         updateSelectedAsset({ shopCatalog: nextCatalog });
     };
@@ -161,54 +193,150 @@ export const ConfigAssetsView = ({ onNavigate }: ConfigAssetsViewProps) => {
                         <h2 className="font-cinzel text-fantasy-gold text-xl">Config Assets</h2>
                     </div>
                     <div className="flex gap-2 mb-4">
-                        {TABS.map(item => (
+                        <Button
+                            variant={section === 'assets' ? 'primary' : 'secondary'}
+                            size="sm"
+                            onClick={() => {
+                                setSection('assets');
+                                setSelectedShopItemId(null);
+                            }}
+                        >
+                            Assets
+                        </Button>
+                        <Button
+                            variant={section === 'shops' ? 'primary' : 'secondary'}
+                            size="sm"
+                            onClick={() => {
+                                setSection('shops');
+                                setSelectedAssetId(null);
+                                setSelectedShopItemId(null);
+                            }}
+                        >
+                            Shops
+                        </Button>
+                    </div>
+                    {section === 'assets' && (
+                        <>
+                            <div className="flex gap-2 mb-4">
+                                {TABS.map(item => (
+                                    <Button
+                                        key={item}
+                                        variant={tab === item ? 'primary' : 'secondary'}
+                                        size="sm"
+                                        onClick={() => {
+                                            setTab(item);
+                                            setSelectedAssetId(null);
+                                            setSelectedShopItemId(null);
+                                        }}
+                                    >
+                                        {item}
+                                    </Button>
+                                ))}
+                            </div>
+                            <label className="mb-4 border-2 border-dashed border-fantasy-muted/30 rounded-lg p-4 cursor-pointer hover:border-fantasy-accent/50">
+                                <div className="flex items-center justify-center gap-2 text-fantasy-muted">
+                                    <Upload className="w-4 h-4" />
+                                    Upload
+                                </div>
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    accept={tab === 'audio' ? 'audio/*' : 'image/*'}
+                                    onChange={(event) => {
+                                        if (!event.target.files?.[0]) return;
+                                        addAsset(event.target.files[0], tab);
+                                        event.target.value = '';
+                                    }}
+                                />
+                            </label>
+                            <div className="overflow-y-auto space-y-2">
+                                {assets.map(asset => (
+                                    <button
+                                        key={asset.id}
+                                        className={`w-full text-left p-2 rounded-lg border ${selectedAssetId === asset.id ? 'border-fantasy-gold bg-fantasy-accent/10' : 'border-white/10 bg-black/20'}`}
+                                        onClick={() => setSelectedAssetId(asset.id)}
+                                    >
+                                        <p className="text-sm text-fantasy-text truncate">{asset.name}</p>
+                                        <p className="text-xs text-fantasy-muted">{asset.type}</p>
+                                    </button>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                    {section === 'shops' && (
+                        <>
                             <Button
-                                key={item}
-                                variant={tab === item ? 'primary' : 'secondary'}
-                                size="sm"
-                                onClick={() => {
-                                    setTab(item);
-                                    setSelectedAssetId(null);
+                                variant="secondary"
+                                className="mb-4 w-full"
+                                onClick={async () => {
+                                    const name = window.prompt('Nombre de la plantilla:');
+                                    if (!name || !name.trim()) return;
+                                    const id = await addTemplate(name.trim(), []);
+                                    setSelectedTemplateId(id);
                                     setSelectedShopItemId(null);
                                 }}
                             >
-                                {item}
+                                Nueva plantilla
                             </Button>
-                        ))}
-                    </div>
-                    <label className="mb-4 border-2 border-dashed border-fantasy-muted/30 rounded-lg p-4 cursor-pointer hover:border-fantasy-accent/50">
-                        <div className="flex items-center justify-center gap-2 text-fantasy-muted">
-                            <Upload className="w-4 h-4" />
-                            Upload
-                        </div>
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept={tab === 'audio' ? 'audio/*' : 'image/*'}
-                            onChange={(event) => {
-                                if (!event.target.files?.[0]) return;
-                                addAsset(event.target.files[0], tab);
-                                event.target.value = '';
-                            }}
-                        />
-                    </label>
-                    <div className="overflow-y-auto space-y-2">
-                        {assets.map(asset => (
-                            <button
-                                key={asset.id}
-                                className={`w-full text-left p-2 rounded-lg border ${selectedAssetId === asset.id ? 'border-fantasy-gold bg-fantasy-accent/10' : 'border-white/10 bg-black/20'}`}
-                                onClick={() => setSelectedAssetId(asset.id)}
-                            >
-                                <p className="text-sm text-fantasy-text truncate">{asset.name}</p>
-                                <p className="text-xs text-fantasy-muted">{asset.type}</p>
-                            </button>
-                        ))}
-                    </div>
+                            <div className="overflow-y-auto space-y-2">
+                                {templates.map(template => (
+                                    <button
+                                        key={template.id}
+                                        className={`w-full text-left p-2 rounded-lg border ${selectedTemplateId === template.id ? 'border-fantasy-gold bg-fantasy-accent/10' : 'border-white/10 bg-black/20'}`}
+                                        onClick={() => setSelectedTemplateId(template.id)}
+                                    >
+                                        <div className="flex items-center justify-between gap-2">
+                                            <div className="min-w-0">
+                                                <p className="text-sm text-fantasy-text truncate">{template.name}</p>
+                                                <p className="text-xs text-fantasy-muted">{template.items.length} items</p>
+                                            </div>
+                                            <div className="flex gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-7 w-7"
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        const nextName = window.prompt('Renombrar plantilla:', template.name);
+                                                        if (!nextName || !nextName.trim()) return;
+                                                        updateTemplate(template.id, { name: nextName.trim() });
+                                                    }}
+                                                >
+                                                    <Edit2 className="w-3 h-3" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-7 w-7 text-red-400"
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        if (!confirm('Eliminar plantilla?')) return;
+                                                        deleteTemplate(template.id);
+                                                        if (selectedTemplateId === template.id) {
+                                                            setSelectedTemplateId(null);
+                                                            setSelectedShopItemId(null);
+                                                        }
+                                                    }}
+                                                >
+                                                    <Trash2 className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </>
+                    )}
                 </GlassPanel>
                 <GlassPanel className="col-span-8 h-full p-6 overflow-y-auto">
-                    {!selectedAsset && (
+                    {section === 'assets' && !selectedAsset && (
                         <div className="h-full flex items-center justify-center text-fantasy-muted">
                             Select an asset to configure
+                        </div>
+                    )}
+                    {section === 'shops' && !selectedTemplate && (
+                        <div className="h-full flex items-center justify-center text-fantasy-muted">
+                            Select a shop template to configure
                         </div>
                     )}
                     {selectedAsset && (
@@ -216,28 +344,50 @@ export const ConfigAssetsView = ({ onNavigate }: ConfigAssetsViewProps) => {
                             <h3 className="font-cinzel text-2xl text-fantasy-gold">{selectedAsset.name}</h3>
                             {selectedAsset.type === 'map' && (
                                 <div className="space-y-4">
-                                    <label className="block text-sm text-fantasy-muted">
-                                        Tipo de mapa
-                                        <select
-                                            className="w-full mt-1 bg-black/30 border border-white/10 rounded-lg p-2"
-                                            value={mapKind}
-                                            onChange={(event) => {
-                                                const nextKind = event.target.value as 'common' | 'shop';
-                                                updateSelectedAsset({
-                                                    mapKind: nextKind,
-                                                    shopCatalog: nextKind === 'shop' ? (selectedAsset.shopCatalog ?? []) : []
-                                                });
-                                                if (nextKind !== 'shop') {
-                                                    setSelectedShopItemId(null);
-                                                }
-                                            }}
-                                        >
-                                            <option value="common">Común</option>
-                                            <option value="shop">Tienda</option>
-                                        </select>
-                                    </label>
+                                    {section === 'assets' && (
+                                        <label className="block text-sm text-fantasy-muted">
+                                            Tipo de mapa
+                                            <select
+                                                className="w-full mt-1 bg-black/30 border border-white/10 rounded-lg p-2"
+                                                value={mapKind}
+                                                onChange={(event) => {
+                                                    const nextKind = event.target.value as 'common' | 'shop';
+                                                    updateSelectedAsset({
+                                                        mapKind: nextKind,
+                                                        shopTemplateId: nextKind === 'shop' ? selectedAsset.shopTemplateId : undefined,
+                                                        shopCatalog: nextKind === 'shop' ? (selectedAsset.shopCatalog ?? []) : []
+                                                    });
+                                                    if (nextKind !== 'shop') {
+                                                        setSelectedShopItemId(null);
+                                                    }
+                                                }}
+                                            >
+                                                <option value="common">Común</option>
+                                                <option value="shop">Tienda</option>
+                                            </select>
+                                        </label>
+                                    )}
                                     {mapKind === 'shop' && (
                                         <div className="space-y-4">
+                                            {section === 'assets' && (
+                                                <label className="block text-sm text-fantasy-muted">
+                                                    Plantilla de tienda
+                                                    <select
+                                                        className="w-full mt-1 bg-black/30 border border-white/10 rounded-lg p-2"
+                                                        value={selectedAsset.shopTemplateId ?? ''}
+                                                        onChange={(event) => {
+                                                            updateSelectedAsset({ shopTemplateId: event.target.value || undefined });
+                                                        }}
+                                                    >
+                                                        <option value="">Sin plantilla</option>
+                                                        {templates.map((template) => (
+                                                            <option key={template.id} value={template.id}>{template.name}</option>
+                                                        ))}
+                                                    </select>
+                                                </label>
+                                            )}
+                                            {section === 'shops' && (
+                                                <>
                                             <div className="space-y-2">
                                                 <p className="text-xs text-fantasy-muted bg-black/30 border border-white/10 rounded-lg p-2">
                                                     Si una armadura Ligera, Media o Pesada se lleva sin maestria, se tiene desventaja en tiradas de Fuerza o Destreza con D20 y no se pueden lanzar conjuros.
@@ -866,6 +1016,8 @@ export const ConfigAssetsView = ({ onNavigate }: ConfigAssetsViewProps) => {
                                                     )}
                                                 </div>
                                             </div>
+                                                </>
+                                            )}
                                         </div>
                                     )}
                                 </div>

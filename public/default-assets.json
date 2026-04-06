@@ -1,12 +1,34 @@
 {
     "maps": [
         {
-            "file": "tabern_map01.jpg",
-            "name": "Tavern"
+            "file": "forest_tavern.jpg",
+            "name": "Taberna",
+            "folderPath": "forest"
         },
         {
-            "file": "cementery_map01.webp",
-            "name": "Cementery"
+            "file": "forest_cementery.webp",
+            "name": "Cementerio",
+            "folderPath": "forest"
+        },
+        {
+            "file": "armory_city.webp",
+            "name": "Armería",
+            "folderPath": "city"
+        },
+        {
+            "file": "forest_medieval_tower.webp",
+            "name": "Torre Medieval",
+            "folderPath": "forest"
+        },
+        {
+            "file": "forest_tall_medieval_tower.webp",
+            "name": "Torre Alta",
+            "folderPath": "forest"
+        },
+        {
+            "file": "tabern_city.webp",
+            "name": "Taberna",
+            "folderPath": "city"
         }
     ],
     "tokens": [
@@ -19,6 +41,156 @@
             "file": "king_goblin.webp",
             "name": "Rey Goblin",
             "folderPath": "Goblins"
+        },
+        {
+            "file": "archer_goblin.webp",
+            "name": "Arquero Goblin",
+            "folderPath": "Goblins"
+        },
+        {
+            "file": "elite_general_goblin.webp",
+            "name": "General Goblin de Élite",
+            "folderPath": "Goblins"
+        },
+        {
+            "file": "goblin_general.webp",
+            "name": "General Goblin",
+            "folderPath": "Goblins"
+        },
+        {
+            "file": "warrior_goblin.webp",
+            "name": "Goblin Guerrero",
+            "folderPath": "Goblins"
+        },
+        {
+            "file": "battle_skeleton.webp",
+            "name": "Esqueleto de Batalla",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "brute_skeleton.webp",
+            "name": "Esqueleto Bruto",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "elite_skeleton_warrior.webp",
+            "name": "Guerrero Esqueleto de Élite",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "skeletal_hellhound.webp",
+            "name": "Sabueso Infernal Esquelético",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "skeleton_king_p1.webp",
+            "name": "Rey Esqueleto Fase 1",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "skeleton_king_p2.webp",
+            "name": "Rey Esqueleto Fase 2",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "skeleton_monarch.webp",
+            "name": "Monarca Esqueleto",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "skeleton_warlord.webp",
+            "name": "Señor de la Guerra Esqueleto",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "skeleton_warrior.webp",
+            "name": "Guerrero Esqueleto",
+            "folderPath": "Skeletons"
+        },
+        {
+            "file": "soldier_army.webp",
+            "name": "Soldado",
+            "folderPath": "Medieval Army"
+        },
+        {
+            "file": "archer.webp",
+            "name": "Arquero",
+            "folderPath": "Medieval Army"
+        },
+        {
+            "file": "army_captain.webp",
+            "name": "Capitán del Ejército",
+            "folderPath": "Medieval Army"
+        },
+        {
+            "file": "elite_knight.webp",
+            "name": "Caballero de Élite",
+            "folderPath": "Medieval Army"
+        },
+        {
+            "file": "grand_general.webp",
+            "name": "Gran General",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "corrupt_beetle.png",
+            "name": "Escarabajo Corrupto",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "corrupt_chimera.png",
+            "name": "Quimera Corrupta",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "corrupt_grand_general.png",
+            "name": "Gran General Corrupto",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "corrupt_minotaur.png",
+            "name": "Minotauro Corrupto",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "corrupt_statue.png",
+            "name": "Estatua Corrupta",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "corrupt_warrior_statue.png",
+            "name": "Estatua de Guerrero Corrupta",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "mutant_squirrel.png",
+            "name": "Ardilla Mutante",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "sleepyhead_p1.png",
+            "name": "Dormilón Fase 1",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "sleepyhead_p2.png",
+            "name": "Dormilón Fase 2",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "sleepyhead_p3.png",
+            "name": "Dormilón Fase 3",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "statue.png",
+            "name": "Estatua",
+            "folderPath": "Corrupts"
+        },
+        {
+            "file": "warrior_statue.png",
+            "name": "Estatua de Guerrero",
+            "folderPath": "Corrupts"
         }
     ],
     "assets": [
@@ -28,8 +200,8 @@
             "folderPath": "Armors"
         },
         {
-            "file": "common_sword.webp",
-            "name": "Espada común",
+            "file": "short_sword.webp",
+            "name": "Espada corta",
             "folderPath": "Weapons"
         },
         {
@@ -56,6 +228,31 @@
             "file": "wooden_arrow.webp",
             "name": "Flecha de madera",
             "folderPath": "Objects"
+        },
+        {
+            "file": "dagger.webp",
+            "name": "Daga",
+            "folderPath": "Weapons"
+        },
+        {
+            "file": "garrote.webp",
+            "name": "Garrote",
+            "folderPath": "Weapons"
+        },
+        {
+            "file": "garrote_grande.webp",
+            "name": "Garrote Grande",
+            "folderPath": "Weapons"
+        },
+        {
+            "file": "long_sword.webp",
+            "name": "Espada Larga",
+            "folderPath": "Weapons"
+        },
+        {
+            "file": "staff.webp",
+            "name": "Báculo",
+            "folderPath": "Weapons"
         }
     ]
 }

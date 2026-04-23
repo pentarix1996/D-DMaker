@@ -3,7 +3,7 @@ import { useAssets } from '@/hooks/useAssets';
 import { useVaultFolders } from '@/hooks/useVaultFolders';
 import { Button } from '@/components/ui/Button';
 import { GlassPanel } from '@/components/ui/GlassPanel';
-import { Upload, Map as MapIcon, Sword, Trash2, Music, X, Package, Folder, FolderPlus, ArrowUp, Pencil } from 'lucide-react';
+import { Upload, Map as MapIcon, Sword, Trash2, Music, X, Package, Folder, FolderPlus, ArrowUp, Pencil, Play } from 'lucide-react';
 import type { Asset, AssetType } from '@/types';
 
 interface VaultProps {
@@ -27,6 +27,12 @@ export const Vault = ({ allowedTypes = ['map', 'token'], className, onClose }: V
 
     const handleUpload = (e: React.ChangeEvent<HTMLInputElement>, uploadType?: AssetType) => {
         if (e.target.files?.[0]) {
+            const file = e.target.files[0];
+            const MAX_SIZE = 150 * 1024 * 1024; // 150MB
+            if (file.size > MAX_SIZE) {
+                alert('El archivo es demasiado grande. Máximo 150MB.');
+                return;
+            }
             const type = (uploadType || activeAssetType) as AssetType;
             const folderPath = type === 'audio'
                 ? ''
@@ -35,7 +41,7 @@ export const Vault = ({ allowedTypes = ['map', 'token'], className, onClose }: V
                     : type === 'token'
                         ? tokenPath
                         : assetPath;
-            addAsset(e.target.files[0], type, folderPath);
+            addAsset(file, type, folderPath);
         }
     };
 
@@ -220,7 +226,7 @@ export const Vault = ({ allowedTypes = ['map', 'token'], className, onClose }: V
                     <label className="aspect-square border-2 border-dashed border-fantasy-muted/20 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-fantasy-accent/50 hover:bg-fantasy-accent/5 transition-colors group">
                         <Upload className="w-6 h-6 text-fantasy-muted group-hover:text-fantasy-accent mb-2" />
                         <span className="text-xs text-fantasy-muted text-center px-1">Upload {activeAssetType === 'map' ? 'BG' : activeAssetType === 'audio' ? 'Track' : activeAssetType === 'token' ? 'Token' : 'Asset'}</span>
-                        <input type="file" className="hidden" accept={activeAssetType === 'audio' ? "audio/*" : "image/*"} onChange={handleUpload} />
+                        <input type="file" className="hidden" accept={activeAssetType === 'audio' ? "audio/*" : activeAssetType === 'map' ? "image/*,video/mp4,video/webm" : "image/*"} onChange={handleUpload} />
                     </label>
                     {activeAssetType !== 'audio' && currentFolders.map((folder) => (
                         <div
@@ -257,22 +263,35 @@ export const Vault = ({ allowedTypes = ['map', 'token'], className, onClose }: V
                             </div>
                         </div>
                     ))}
-                    {sortedAssets.map((asset) => (
-                        <div
-                            key={asset.id}
-                            className="group relative aspect-square bg-black/40 rounded-lg overflow-hidden border border-white/5 hover:border-fantasy-gold/50 cursor-grab flex items-center justify-center"
-                            draggable
-                            onDragStart={(e) => onDragStart(e, asset)}
-                            onDragEnd={() => setDraggedAssetId(null)}
-                        >
-                            {asset.type === 'audio' ? (
-                                <div className="flex flex-col items-center justify-center text-fantasy-muted p-2 text-center">
-                                    <Music className="w-8 h-8 mb-2 opacity-50" />
-                                    <span className="text-xs line-clamp-2">{asset.name}</span>
-                                </div>
-                            ) : (
-                                <img src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
-                            )}
+                    {sortedAssets.map((asset) => {
+                        const videoUrl = asset.fileData.type.startsWith('video/') ? URL.createObjectURL(asset.fileData) : null;
+                        return (
+                            <div
+                                key={asset.id}
+                                className="group relative aspect-square bg-black/40 rounded-lg overflow-hidden border border-white/5 hover:border-fantasy-gold/50 cursor-grab flex items-center justify-center"
+                                draggable
+                                onDragStart={(e) => onDragStart(e, asset)}
+                                onDragEnd={() => setDraggedAssetId(null)}
+                            >
+                                {asset.type === 'audio' ? (
+                                    <div className="flex flex-col items-center justify-center text-fantasy-muted p-2 text-center">
+                                        <Music className="w-8 h-8 mb-2 opacity-50" />
+                                        <span className="text-xs line-clamp-2">{asset.name}</span>
+                                    </div>
+                                ) : (
+                                    <>
+                                        {asset.fileData.type.startsWith('video/') ? (
+                                            <video src={videoUrl ?? undefined} className="w-full h-full object-cover" muted />
+                                        ) : (
+                                            <img src={asset.imageUrl} alt={asset.name} className="w-full h-full object-cover" />
+                                        )}
+                                        {asset.fileData.type.startsWith('video/') && (
+                                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                <Play className="w-10 h-10 text-white/70" fill="rgba(255,255,255,0.3)" />
+                                            </div>
+                                        )}
+                                    </>
+                                )}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2">
                                 {asset.type !== 'audio' && <span className="text-xs truncate text-white">{asset.name}</span>}
                                 <div className="absolute top-1 left-1">
@@ -291,9 +310,10 @@ export const Vault = ({ allowedTypes = ['map', 'token'], className, onClose }: V
                                 >
                                     <Trash2 className="w-3 h-3" />
                                 </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </GlassPanel>

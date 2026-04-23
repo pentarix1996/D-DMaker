@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { AssetImage } from '@/components/AssetImage';
+import { AssetMedia } from '@/components/AssetMedia';
 import { DraggableToken, TOKEN_SIZE_PCT } from '@/features/editor/DraggableToken';
 import { v4 as uuidv4 } from 'uuid';
 import type { SceneAsset } from '@/types';
@@ -44,6 +45,14 @@ export const EditorCanvas = ({ fogEditMode = false, fogTool = 'paint' }: EditorC
             };
         }).filter((source): source is FogLightSource => source !== null);
     }, [scene, assetsById]);
+
+    const isBackgroundVideo = (() => {
+        const asset = scene?.backgroundAssetId ? assetsById.get(scene.backgroundAssetId) : undefined;
+        if (!asset) return false;
+        const isVideoType = asset.fileData.type.startsWith('video/');
+        const isVideoName = asset.name.match(/\.(mp4|webm|ogg|mov)$/i);
+        return isVideoType || !!isVideoName;
+    })();
 
     useEffect(() => {
         if (!scene || !shouldRenderFog) return;
@@ -202,11 +211,20 @@ export const EditorCanvas = ({ fogEditMode = false, fogTool = 'paint' }: EditorC
                 {/* Background Layer */}
                 {scene.backgroundAssetId && (
                     <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-                        <AssetImage
-                            id={scene.backgroundAssetId}
-                            className="w-full h-full object-contain"
-                            draggable={false}
-                        />
+                        {isBackgroundVideo ? (
+                            <AssetMedia
+                                key={scene.id}
+                                id={scene.backgroundAssetId}
+                                className="w-full h-full object-contain pointer-events-auto"
+                                draggable={false}
+                            />
+                        ) : (
+                            <AssetImage
+                                id={scene.backgroundAssetId}
+                                className="w-full h-full object-contain"
+                                draggable={false}
+                            />
+                        )}
                     </div>
                 )}
 
@@ -225,7 +243,7 @@ export const EditorCanvas = ({ fogEditMode = false, fogTool = 'paint' }: EditorC
                 {shouldRenderFog && (
                     <canvas
                         ref={fogCanvasRef}
-                        className="absolute inset-0 z-[15]"
+                        className={`absolute inset-0 ${isBackgroundVideo ? 'z-0' : 'z-[15]'}`}
                         style={{ width: '100%', height: '100%', imageRendering: 'auto', pointerEvents: fogEditMode && isEditMode ? 'auto' : 'none' }}
                         onMouseDown={(e) => {
                             if (!fogEditMode || !isEditMode) return;

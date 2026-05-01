@@ -6,7 +6,7 @@ interface AssetMediaProps {
   className?: string;
 }
 
-export const AssetMedia = ({ id, className, ...props }: AssetMediaProps & React.ImgHTMLAttributes<HTMLImageElement>) => {
+export const AssetMedia = ({ id, className, ...props }: AssetMediaProps & React.ImgHTMLAttributes<HTMLImageElement> & React.VideoHTMLAttributes<HTMLVideoElement>) => {
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
   const [isVideo, setIsVideo] = useState(false);
 

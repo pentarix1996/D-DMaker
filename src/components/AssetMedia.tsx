@@ -35,15 +35,16 @@ export const AssetMedia = ({ id, className, ...props }: AssetMediaProps & React.
   if (!objectUrl) return <div className={`bg-white/5 animate-pulse ${className}`} />;
 
   if (isVideo) {
+    const videoProps = props as React.VideoHTMLAttributes<HTMLVideoElement>;
     return (
       <video
         src={objectUrl}
         autoPlay
-        loop
         playsInline
         controls
+        loop={videoProps.loop ?? true}
         className={className}
-        {...(props as React.VideoHTMLAttributes<HTMLVideoElement>)}
+        {...videoProps}
       />
     );
   }

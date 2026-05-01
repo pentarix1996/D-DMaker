@@ -217,6 +217,7 @@ export const EditorCanvas = ({ fogEditMode = false, fogTool = 'paint' }: EditorC
                                 id={scene.backgroundAssetId}
                                 className="w-full h-full object-contain pointer-events-auto"
                                 draggable={false}
+                                loop={isEditMode}
                             />
                         ) : (
                             <AssetImage
